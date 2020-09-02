@@ -1,0 +1,23 @@
+{
+  "name": "paradox-ck3-syntax",
+  "theme": "syntax",
+  "version": "0.0.0",
+  "description": "Adds syntax highlighting to Crusader Kings III config files in Atom",
+  "keywords": [
+    "syntax",
+    "theme",
+    "crusader",
+    "kings",
+    "crusader kings 3",
+    "ck3",
+    "modding",
+    "paradox",
+    "paradoxplaza",
+    "paradoxwikis"
+  ],
+  "repository": "https://github.com/atom/paradox-ck3-syntax",
+  "license": "MIT",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  }
+}

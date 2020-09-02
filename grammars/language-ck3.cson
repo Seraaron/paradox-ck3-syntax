@@ -1,0 +1,5004 @@
+scopeName: 'source.ck3' # <scope> should be a short, unique indicator for the language ("js", "php", "c", etc.)
+name: 'Crusader Kings 3' # The title that will show up in grammar selection and on your status bar.
+fileTypes: [ # An array of file extensions.
+  'txt'
+  'ck2'
+  'ck3'
+]
+limitLineLength: false
+patterns: [
+  # { include: '#clause' }
+  {
+    contentName: 'meta.scripted_effect.block..ck2'
+    beginCaptures:
+      0: name: 'entity.name.scripted_effect.ck2'
+      1: name: 'keyword.control.scripted_effect.ck2'
+      2: name: 'punctuation.definition.scripted_effect.assignment.equals.ck2'
+      3: name: 'punctuation.definition.scripted_effect.begin.bracket.curly.ck2'
+    begin: '(?xi)
+      \\b
+        ([[:alpha:]][[:alnum:]_]+_effect)
+      \\s*
+        (=)
+      \\s*
+        (\\{)
+      '
+    endCaptures:
+      1: name: 'punctuation.definition.scripted_effect.end.bracket.curly'
+    end: '(?xi)
+        (\\})
+      '
+    patterns: [
+      { include: '#effect_clause' }
+    ]
+  }
+  {
+    contentName: 'meta.scripted_trigger.block.ck2'
+    beginCaptures:
+      0: name: 'entity.name.scripted_trigger.ck2'
+      1: name: 'keyword.control.scripted_trigger.ck2'
+      2: name: 'punctuation.definition.scripted_trigger.assignment.equals.ck2'
+      3: name: 'punctuation.definition.scripted_trigger.begin.bracket.curly.ck2'
+    begin: '(?xi)
+      \\b
+        ([[:alpha:]][[:alnum:]_]+_trigger)
+      \\s*
+        (=)
+      \\s*
+        (\\{)
+      '
+    endCaptures:
+      1: name: 'punctuation.definition.scripted_trigger.end.bracket.curly'
+    end: '(?xi)
+        (\\})
+      '
+    patterns: [
+      { include: '#condition_clause' }
+    ]
+  }
+  {
+    contentName: 'meta.decisions.block.ck2'
+    beginCaptures:
+      1: name: 'keyword.control.decisions.ck2'
+      2: name: 'entity.type.plot.decisions.ck2'
+      3: name: 'entity.type.targetted.decisions.ck2'
+      4: name: 'entity.type.settlement.decisions.ck2'
+      5: name: 'entity.type.title.decisions.ck2'
+      6: name: 'punctuation.definition.decisions.assignment.equals.ck2'
+      7: name: 'punctuation.definition.decisions.begin.bracket.curly.ck2'
+    begin: '(?xi)
+      \\b
+      (
+        (?:
+          (plot_)
+          |(targetted_)
+          |(settlement)
+          |(title_)
+        )?decisions
+      )
+      \\s*
+        (=)
+      \\s*
+        (\\{)
+      '
+    endCaptures:
+      1: name: 'punctuation.definition.decisions.end.bracket.curly.ck2'
+    end: '(?xi)
+        (\\})
+      '
+    patterns: [
+      {
+        contentName: 'meta.decision.block.ck2'
+        beginCaptures:
+          0: name: 'meta.decision.ck2'
+          1: name: 'storage.name.definition.ck2'
+          2: name: 'punctuation.definition.decision.assignment.equals.ck2'
+          3: name: 'punctuation.definition.decision.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            ([[:alpha:]][[:word:]]+)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          0: name: 'punctuation.definition.decision.end.bracket.curly.ck2'
+        end: '(?xi)
+            \\}
+          '
+        patterns: [
+          {
+            captures:
+              1: name: 'keyword.control.decision.flag.high_prio.ck2'
+              2: name: 'keyword.control.decision.flag.filter.ck2'
+              3: name: 'keyword.control.decision.flag.ai_t_filter.ck2'
+              4: name: 'keyword.control.decision.flag.third_p_filter.ck2'
+              5: name: 'keyword.control.decision.flag.ai_p_filter.ck2'
+              6: name: 'keyword.control.decision.flag.third_party.ck2'
+              7: name: 'keyword.control.decision.flag.only_playable.ck2'
+              8: name: 'keyword.control.decision.flag.ai_only.ck2'
+              9: name: 'keyword.control.decision.flag.show_t.ck2'
+              10: name: 'keyword.control.decision.flag.ai_check_interval.ck2'
+            match: '(?xi)
+              \\b
+              (?:
+                (is_high_prio)
+                |(filter)
+                |(ai_target_filter)
+                |(third_party_filter)
+                |(ai_third_party_filter)
+                |(third_party)
+                |(only_playable)
+                |(ai)
+                |(show_third_party_potential)
+                |(ai_check_interval)
+              )
+              (?=\\s*=\\s*[[:alpha:]])
+              '
+          }
+          {
+            captures:
+              1: name: 'keyword.control.decision.filter.self.ck2'
+            match: '(?xi)
+              \\b
+              (
+                self
+                |spouse
+                |(?:home_)?court(?:_including_me)?
+                |liege
+                |vassals
+                |(?:sub_)?realm(?:_including_me)?
+                |dynasty(?:_including_me)?
+                |close_relatives
+                |rivals
+                |friends
+                |rel_head(?:_including_me)?
+                |society(?:_including_me)?
+                |vassal_wars
+                |independent_rulers
+                |all(?:_including_me)?
+              )
+              (?!\\s*=)
+              \\b
+              '
+          }
+          {
+            contentName: 'meta.decision.condition_block.ck2'
+            beginCaptures:
+              1: name: 'function.support.decision.definition.ck2'
+              2: name: 'entity.name.decision.condition_block.from_potential.ck2'
+              3: name: 'entity.name.decision.condition_block.potential.ck2'
+              4: name: 'entity.name.decision.condition_block.allow.ck2'
+              5: name: 'entity.name.decision.condition_block.revoke_allowed.ck2'
+              6: name: 'entity.name.decision.condition_block.ai_will_do.ck2'
+              7: name: 'entity.name.decision.condition_block.third_party_allow.ck2'
+              8: name: 'punctuation.definition.decision.condition_block.assignment.equals.ck2'
+              9: name: 'punctuation.definition.decision.condition_block.begin.bracket.curly.ck2'
+            begin: '(?xi)
+              \\b
+              (
+                (from_potential)
+                |(potential)
+                |(revoke_allowed)
+                |(ai_will_do)
+                |(third_party_allow)
+                |(allow)
+              )
+              \\s*
+                (=)
+              \\s*
+                (\\{)
+              '
+            endCaptures:
+              0: name: 'punctuation.definition.decision.condition_block.end.bracket.curly.ck2'
+            end: '(?xi)
+                \\}
+              '
+            patterns: [
+              { include: '#condition_clause' }
+            ]
+          }
+          {
+            contentName: 'meta.decision.effect_block.ck2'
+            beginCaptures:
+              1: name: 'function.support.decision.effect_block.ck2'
+              2: name: 'punctuation.definition.decision.effect_block.assignment.equals.ck2'
+              3: name: 'punctuation.definition.decision.effect_block.begin.bracket.curly.ck2'
+            begin: '(?xi)
+              \\b
+                (effect)
+              \\s*
+                (=)
+              \\s*
+                (\\{)
+              '
+            endCaptures:
+              0: name: 'punctuation.definition.decision.effect_block.end.bracket.curly.ck2'
+            end: '(?xi)
+                \\}
+              '
+            patterns: [
+              { include: '#effect_clause' }
+            ]
+          }
+          { include: '#global_includes' }
+        ]
+      }
+    ]
+  }
+  {
+    contentName: 'meta.history.character.block.ck2'
+    beginCaptures:
+      1: name: 'keyword.control.history.character.id.ck2'
+      2: name: 'punctuation.definition.decision.history.character.assignment.equals.ck2'
+      3: name: 'punctuation.definition.decision.history.character.begin.bracket.curly.ck2'
+    begin: '(?xi)
+      \\b
+        (\\d+)
+      \\s*
+        (=)
+      \\s*
+        (\\{)
+      '
+    endCaptures:
+      0: name: 'punctuation.definition.decision.history.character.end.bracket.curly.ck2'
+    end: '(?xi)
+        \\}
+      '
+    patterns: [
+      {
+        contentName: 'meta.history.effect.block.ck2'
+        beginCaptures:
+          1: name: 'keyword.control.history.effect.ck2'
+          2: name: 'punctuation.definition.history.effect.assignment.equals.ck2'
+          3: name: 'punctuation.definition.history.effect.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (effect)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          0: name: 'punctuation.definition.history.effect.end.bracket.curly.ck2'
+        end: '(?xi)
+            \\}
+          '
+        patterns: [
+          { include: '#new_char_conditions' }
+          { include: '#condition_clause' }
+          { include: '#effect_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.history.date.block.ck2'
+        beginCaptures:
+          1: name: 'keyword.control.history.date.ck2'
+          2: name: 'punctuation.definition.history.date.assignment.equals.ck2'
+          3: name: 'punctuation.definition.history.date.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            \\d{1,4}
+            \\.
+            \\d{1,2}
+            \\.
+            \\d{1,2}
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          0: name: 'punctuation.definition.history.date.end.bracket.curly.ck2'
+        end: '(?xi)
+            \\}
+          '
+        patterns: [
+          {
+            contentName: 'meta.history.effect.block.ck2'
+            beginCaptures:
+              1: name: 'keyword.control.history.effect.ck2'
+              2: name: 'punctuation.definition.history.effect.assignment.equals.ck2'
+              3: name: 'punctuation.definition.history.effect.begin.bracket.curly.ck2'
+            begin: '(?xi)
+              \\b
+                (effect)
+              \\s*
+                (=)
+              \\s*
+                (\\{)
+              '
+            endCaptures:
+              0: name: 'punctuation.definition.history.effect.end.bracket.curly.ck2'
+            end: '(?xi)
+                \\}
+              '
+            patterns: [
+              { include: '#new_char_conditions' }
+              { include: '#effect_clause' }
+            ]
+          }
+          { include: '#new_char_conditions' }
+          { include: '#effect_clause' }
+        ]
+      }
+      { include: '#new_char_conditions' }
+      { include: '#condition_clause' }
+      { include: '#effect_clause' }
+    ]
+  }
+  {
+    name: 'keyword.control.name.ck2'
+    match: '(?xi)
+      \\b
+        (name)
+      \\b
+      (?!\\s*=\\s*\\{)
+      '
+  }
+  {
+    contentName: 'meta.history.date.block.ck2'
+    beginCaptures:
+      1: name: 'keyword.control.history.date.ck2'
+      2: name: 'punctuation.definition.history.date.assignment.equals.ck2'
+      3: name: 'punctuation.definition.history.date.begin.bracket.curly.ck2'
+    begin: '(?xi)
+      \\b
+      (
+        \\d{1,4}
+        \\.
+        \\d{1,2}
+        \\.
+        \\d{1,2}
+      )
+      \\s*
+        (=)
+      \\s*
+        (\\{)
+      '
+    endCaptures:
+      0: name: 'punctuation.definition.history.date.end.bracket.curly.ck2'
+    end: '(?xi)
+        \\}
+      '
+    patterns: [
+      {
+        captures:
+          1: name: "support.function.war_history.deffender.add.ck2"
+          2: name: "support.function.war_history.deffender.rem.ck2"
+          3: name: "support.function.war_history.attacker.add.ck2"
+          4: name: "support.function.war_history.attacker.rem.ck2"
+        match: '(?xi)
+          \\b
+          (?:
+            (add_defender)
+            |(rem_defender)
+            |(add_attacker)
+            |(rem_attacker)
+          )
+          \\b
+          '
+      }
+      { include: '#effect_clause' }
+    ]
+  }
+  {
+    contentName: 'meta.history.cb.block.ck2'
+    beginCaptures:
+      1: name: 'keyword.control.history.cb.ck2'
+      2: name: 'punctuation.definition.history.cb.assignment.equals.ck2'
+      3: name: 'punctuation.definition.history.cb.begin.bracket.curly.ck2'
+    begin: '(?xi)
+      \\b
+        (casus_belli)
+      \\s*
+        (=)
+      \\s*
+        (\\{)
+      '
+    endCaptures:
+      0: name: 'punctuation.definition.history.cb.end.bracket.curly.ck2'
+    end: '(?xi)
+        \\}
+      '
+    patterns: [
+      {
+        captures:
+          1: name: "variable.language.condition.cb.cb.ck2"
+          2: name: "variable.language.condition.cb.actor.ck2"
+          3: name: "variable.language.condition.cb.recipient.ck2"
+          4: name: "variable.language.condition.cb.landed_title.ck2"
+          5: name: "variable.language.condition.cb.date.ck2"
+        match: '(?xi)
+          \\b
+          (?:
+            (casus_belli)
+            |(actor)
+            |(recipient)
+            |(landed_title)
+            |(date)
+          )
+          \\b
+          '
+      }
+      { include: '#global_includes' }
+    ]
+  }
+  {
+    contentName: 'meta.history.technology.block.ck2'
+    beginCaptures:
+      0: name: 'entity.name.history.technology.ck2'
+      1: name: 'keyword.control.history.technology.ck2'
+      2: name: 'punctuation.definition.history.technology.assignment.equals.ck2'
+      3: name: 'punctuation.definition.history.technology.begin.bracket.curly.ck2'
+    begin: '(?xi)
+      \\b
+        (technology)
+      \\s*
+        (=)
+      \\s*
+        (\\{)
+      '
+    endCaptures:
+      1: name: 'punctuation.definition.history.technology.end.bracket.curly'
+    end: '(?xi)
+        (\\})
+      '
+    patterns: [
+      {
+        contentName: 'meta.technology.title.block.ck2'
+        beginCaptures:
+          0: name: 'entity.name.technology.title.ck2'
+          1: name: 'keyword.control.technology.title.ck2'
+          2: name: 'punctuation.definition.technology.title.assignment.equals.ck2'
+          3: name: 'punctuation.definition.technology.title.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (titles)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.technology.title.end.bracket.curly'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          { include: '#global_includes' }
+        ]
+      }
+      {
+        contentName: 'meta.technology.date.block.ck2'
+        beginCaptures:
+          0: name: 'entity.name.technology.date.ck2'
+          1: name: 'keyword.control.technology.date.ck2'
+          2: name: 'punctuation.definition.technology.date.assignment.equals.ck2'
+          3: name: 'punctuation.definition.technology.date.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (\\d+)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.technology.date.end.bracket.curly'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          {
+            captures:
+              1: name: 'variable.language.condition.military.ck2'
+              2: name: 'variable.language.condition.economy.ck2'
+              3: name: 'variable.language.condition.culture.ck2'
+            match: '(?xi)
+            \\b
+            (
+              (military)
+              |(economy)
+              |(culture)
+            )
+            \\b'
+          }
+          { include: '#condition_clause' }
+          { include: '#global_includes' }
+        ]
+      }
+      { include: '#global_includes' }
+    ]
+  }
+  { include: '#global_includes' }
+  { include: '#events' }
+  { include: '#on_actions' }
+]
+repository:
+  global_includes:
+    patterns: [
+      { include: '#lineComment' }
+      { include: '#numbers' }
+      { include: '#quoted_strings' }
+      { include: '#unquoted_strings' }
+      { include: '#loc_keys' }
+      {
+        captures:
+          1: name: "support.function.title.scope.ck2"
+        match: '(?xi)
+          \\b
+          (
+            (?:b|c(?!_\\d+\\b)|d|k|e)_[[:word:]]+
+          )
+          \\b
+          '
+      }
+      {
+        captures:
+          1: name: "support.function.character.scope.ck2"
+        match: '(?xi)
+          \\b
+          (
+            c_\\d+
+          )
+          \\b
+          '
+      }
+      {
+        captures:
+          1: name: 'storage.type.event_target.ck2'
+          2: name: 'punctuation.definition.event_target.assignment.colon:ck2'
+        match: '(?xi)
+          \\b
+            (event_target)
+            (:)
+            (?=\\w+)
+          '
+      }
+      {
+        captures:
+          1: name: 'support.function.scope.event_target.ck2'
+        match: '(?xi)
+          (?<=:)
+            ([[:alpha:]][[:alnum:]_]+)
+          \\b
+          '
+      }
+      {
+        captures:
+          1: name: 'support.function.scope.event_target.ck2'
+        match: '(?xi)
+          \\b
+            (target_[[:alnum:]_]+)
+          \\b
+          (?!\\s*=)
+          '
+      }
+      # Switch to this if we don't want force use of "target_" prefix
+      # {
+      #   captures:
+      #     1: name: 'support.function.scope.event_target.ck2'
+      #   match: '(?xi)
+      #     (?<=(?:as|et)\\s=\\s)
+      #       ([[:alpha:]][[:alnum:]_]+)
+      #     \\b
+      #     '
+      # }
+      { # Used for mactching scopes as dynamic flags
+          captures:
+            1: name: 'storage.type.dynamic_flag.ck2'
+            2: name: 'punctuation.definition.dynamic_flag.assignment.at.ck2'
+            3: name: 'support.variable.condition.scope.ck2'
+          match: '(?xi)
+            \\b
+              (\\w+)
+              (@)
+            (
+              ROOT
+              |FROM(FROM){,3}
+              |PREV(PREV){,3}
+              |ROOT_((FROM){1,3}
+              |(PREV){1,3})
+              |THIS
+            )
+            \\b
+            '
+      }
+      {
+        captures:
+          1: name: 'keyword.control.namespace.ck2'
+          2: name: 'punctuation.definition.assignment.equals.ck2'
+          3: name: 'constant.character.namespace.ck2'
+        match: '(?xi)
+          \\b
+            (namespace)
+          \\s*
+            (=)
+          \\s*
+            ([[:alpha:]][[:word:]]+)
+          \\b
+          '
+      }
+      {
+        captures:
+          1: name: 'constant.character.namespace.ck2'
+          2: name: 'punctuation.definition.namespace.period.ck2'
+        match: '(?xi)
+          (?<=id\\s=\\s)
+            ([[:word:]]+)
+            (.)
+            (?=\\d+)
+          \\b
+          '
+      }
+      {
+        name: 'keyword.operator.assignment.equals.ck2'
+        match: '(?xi)
+            =
+          '
+      }
+      {
+        name: 'keyword.operator.negation.ck2'
+        match: '(?xi)
+          (?:\\s*)
+            \\-
+          (?:\\s*)
+          '
+      }
+      {
+        captures:
+          1: name: 'constant.language.bool.true.yes.ck2'
+          2: name: 'constant.language.bool.false.no.ck2' # TODO: consider making this a deprecated value
+          3: name: 'constant.language.bool.true.always.ck2'
+          4: name: 'constant.language.bool.false.none.ck2'
+        match: '(?xi)
+          \\b
+          (?:
+            (yes)
+            |(no)
+            |(always)
+            |(none)
+          )
+          \\b
+          '
+      }
+      {
+        captures:
+          1: name: 'keyword.operator.comparison.not.ck2'
+          2: name: 'keyword.operator.comparison.lte.ck2'
+          3: name: 'keyword.operator.comparison.gte.ck2'
+          4: name: 'keyword.operator.comparison.equals.ck2'
+          5: name: 'keyword.operator.comparison.lt.ck2'
+          6: name: 'keyword.operator.comparison.gt.ck2'
+        match: '(?xi)
+          (?:\\s*)
+          (?:
+            (\\!\\=)
+            |(\\<\\=)
+            |(\\>\\=)
+            |(\\=\\=)
+            |(\\<)
+            |(\\>)
+          )
+          (?:\\s*)
+          '
+      }
+      { # Used for mactching scopes as conditions
+        captures:
+          1: name: 'constant.language.condition.scope.ck2'
+        match: '(?xi)
+          (?<!@)
+          \\b
+          (
+            ROOT(?:
+              _(?:FROM){1,3}
+            )?
+            |FROM(?:FROM){,3}
+            |PREV(?:PREV){,3}
+            |THIS
+          )
+          \\b
+          (?!
+            \\s*
+            =
+            \\s*
+            \\{
+          )
+          '
+      }
+    ]
+  oldComment:
+    patterns: [
+      {
+        name: 'comment.line.number-sign.ck2'
+        match: '#.*$'
+      }
+    ]
+  lineComment:
+    patterns: [
+      {
+        name: 'comment.line.number-sign.ck2'
+        contentName: 'meta.comment.line.number-sign.ck2'
+        beginCaptures:
+          0: name: 'punctuation.definition.comment.number-sign.ck2'
+        begin: '(?=#)'
+        end: '$'
+        patterns: [
+          {
+            name: 'storage.type.class.codetag'
+            captures:
+              1: name: 'punctuation.definition.codetag.at-sign'
+              2: name: 'entity.name.codetag.$2'
+              3: name: 'entity.type.codetag.todo'
+              4: name: 'entity.type.codetag.fixme'
+              5: name: 'entity.type.codetag.bug'
+              6: name: 'entity.type.codetag.nobug'
+              7: name: 'entity.type.codetag.req'
+              8: name: 'entity.type.codetag.rfe'
+              9: name: 'entity.type.codetag.idea'
+              10: name: 'entity.type.codetag.see'
+              11: name: 'entity.type.codetag.todoc'
+              12: name: 'entity.type.codetag.cred'
+              13: name: 'entity.type.codetag.stat'
+              14: name: 'entity.type.codetag.rvd'
+              15: name: 'entity.type.codetag.note'
+              16: name: 'entity.type.codetag.hack'
+              17: name: 'entity.type.codetag.cav'
+              18: name: 'entity.type.codetag.alert'
+              19: name: 'entity.type.codetag.question'
+            match: '(?x)
+              (@)?
+              \\b
+                (
+                  (TODO|MILESTONE|MLSTN|DONE|YAGNI|TBD|TOBEDONE)
+                  |(FIXME|XXX|DEBUG|BROKEN|REFACTOR|REFACT|RFCTR
+                    |OOPS|SMELL|NEEDSWORK|INSPECT)
+                  |(BUG(?:FIX)?)
+                  |(
+                    NOBUG
+                    |(?:(?:(?:(?:W|D)O|CA)NT)|N(?:O|EVER)|UN)
+                      FIX(?:(?<=UNFIX)ABLE)?
+                  )
+                  |(REQ(?:UIREMENT)|STORY)
+                  |(RFE|FEETCH|NYI|FR|FTR(?:Q)?)
+                  |(IDEA)
+                  |(SEE|REF(?:ERENCE)?)
+                  |(TODOC|DOCDO|(?:NEEDS|DO)DOC|EXPLAIN|DOCUMENT)
+                  |(CRED(?:IT)?|THANKS)
+                  |(STAT(?:US)?)
+                  |(RVD|REVIEW(?:ED)?)
+                  |(NOTE|HELP)
+                  |(HACK|CLEVER|MAGIC)
+                  |(CAV(?:T|EAT)?|WARNING|CAUTION)
+                  |(ALERT)
+                  |(QUEST(?:ION)?|QSTN|WTF)
+                )
+              \\b
+              [[:word:][:punct:] \\t]*
+              '
+          }
+          {
+            captures:
+              1: name: 'keyword.control.directive.validator.number-sign.ck2'
+              2: name: 'keyword.control.directive.validator.ck2'
+              3: name: 'string.quoted.double.validator.target.ck2'
+              4: name: 'punctuation.definition.validator.target.begin.double.quote.ck2'
+              5: name: 'punctuation.definition.validator.target.bang.ck2'
+              6: name: 'punctuation.definition.validator.target.dot.ck2'
+              7: name: 'punctuation.definition.validator.target.end.double.quote.ck'
+              8: name: 'variable.parameter.validator.ignore.ck2'
+              9: name: 'variable.parameter.validator.metaData.ck2'
+              10: name: 'invalid.illegal.stray_char.ck2'
+            match: '(?xi)
+              \\G
+                (\\#)
+              \\s
+                (Audax\\sValidator)
+              \\s
+              (?:
+                (
+                  (")
+                  (?:
+                    (!)
+                    |(\\.)
+                  )
+                  (")
+                )
+                \\s
+                  (
+                    Ignore_(?:
+                      ALL
+                      |NEXT
+                      |\\d{4}
+                    )
+                  )
+                  |(EnableCommentMetadata)
+              )
+              \\b
+              [ \\t]*
+              ([^#\\n\\c\\f]+)?
+              '
+          }
+          {
+            name: 'punctuation.definition.comment.number-sign.ck2'
+            match: '(?xi)
+                (\\#)
+              '
+          }
+        ]
+      }
+    ]
+  control_flow:
+    patterns: [
+      {
+        name: 'keyword.control.flow.ck2'
+        match: '(?xi)
+        \\b
+          break
+        \\b
+        '
+      }
+      {
+        contentName: 'meta.block.control.if.ck2'
+        beginCaptures:
+          1: name: 'keyword.control.if.ck2'
+          2: name: 'entity.type.else_if.ck2'
+          3: name: 'entity.type.if.ck2'
+          4: name: 'punctuation.definition.if.assignment.equals.ck2'
+          5: name: 'punctuation.definition.if.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            (else_if)
+            |(if)
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.if.end.bracket.curly.ck2'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          { include: '#limit_clause' }
+          { include: '#effect_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.block.control.else.ck2'
+        beginCaptures:
+          1: name: 'keyword.control.else.ck2'
+          2: name: 'punctuation.definition.else.assignment.equals.ck2'
+          3: name: 'punctuation.definition.else.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (else)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.else.end.bracket.curly.ck2'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          { include: '#effect_clause' }
+          { include: '#global_includes' }
+        ]
+      }
+      {
+        contentName: 'meta.block.control.trigger_switch.ck2'
+        beginCaptures:
+          1: name: 'keyword.control.trigger_switch.ck2'
+          2: name: 'punctuation.definition.trigger_switch.assignment.equals.ck2'
+          3: name: 'punctuation.definition.trigger_switch.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (trigger_switch)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.trigger_switch.end.bracket.curly.ck2'
+        end: '
+            (\\})
+          '
+        patterns: [
+          {
+            beginCaptures:
+              1: name: 'keyword.control.on_trigger.ck2'
+              2: name: 'punctuation.definition.on_trigger.assignment.equals.ck2'
+            begin: '(?xi)
+              \\b
+                (on_trigger)
+              \\s*
+                (=)
+              (?=\\s*[[:alpha:]])
+              '
+            end: '(?xi)
+              (?<=[[:alnum:]])
+              (?:$)
+              '
+            patterns: [
+              { include: '#conditions' }
+              { include: '#global_includes' }
+            ]
+          }
+          {
+            contentName: 'meta.control.trigger_switch.branch.block.ck2'
+            beginCaptures:
+              1: name: 'keyword.control.on_trigger.branch.ck2'
+              2: name: 'punctuation.definition.on_trigger.branch.assignment.equals.ck2'
+              3: name: 'punctuation.definition.on_trigger.branch.begin.bracket.curly.ck2'
+            begin: '(?xi)
+              \\b
+                ([[:word:]]+)
+              \\s*
+                (=)
+              \\s*
+                (\\{)
+              '
+            endCaptures:
+              1: name: 'punctuation.definition.on_trigger.branch.end.bracket.curly.ck2'
+            end: '(?xi)
+                (\\})
+              '
+            patterns: [
+              { include: '#effect_clause' }
+            ]
+          }
+          { include: '#global_includes' }
+        ]
+      }
+      {
+        contentName: 'meta.block.control.while.ck2'
+        beginCaptures:
+          1: name: 'keyword.control.while.ck2'
+          2: name: 'punctuation.definition.while.assignment.equals.ck2'
+          3: name: 'punctuation.definition.while.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (while)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.while.end.bracket.curly.ck2'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          { include: '#limit_clause' }
+          { include: '#effect_clause' }
+        ]
+      }
+    ]
+  new_char_conditions:
+    patterns: [
+      {
+        captures:
+          1: name: 'variable.language.condition.new_char.dna.ck2'
+          2: name: 'variable.language.condition.new_char.employer.ck2'
+          3: name: 'variable.language.condition.new_char.female.ck2'
+          4: name: 'variable.language.condition.new_char.random_traits.ck2'
+          5: name: 'variable.language.condition.new_char.genetic_father.ck2'
+          6: name: 'variable.language.condition.new_char.genetic_mother.ck2'
+          7: name: 'variable.language.condition.new_char.historical.ck2'
+          8: name: 'variable.language.condition.new_char.immortal_age.ck2'
+          9: name: 'variable.language.condition.new_char.name.ck2'
+          10: name: 'variable.language.condition.new_char.flag.ck2'
+          11: name: 'variable.language.condition.new_char.father.ck2'
+          12: name: 'variable.language.condition.new_char.real_father.ck2'
+          13: name: 'variable.language.condition.new_char.mother.ck2'
+          14: name: 'variable.language.condition.new_char.properties.ck2'
+          15: name: 'variable.language.condition.new_char.diplomacy.ck2'
+          16: name: 'variable.language.condition.new_char.martial.ck2'
+          17: name: 'variable.language.condition.new_char.stewardship.ck2'
+          18: name: 'variable.language.condition.new_char.intrigue.ck2'
+          19: name: 'variable.language.condition.new_char.learning.ck2'
+          20: name: 'variable.language.condition.new_char.occluded.ck2'
+          21: name: 'variable.language.condition.new_char.birth.ck2'
+        match: '(?xi)
+          \\b
+            (?:
+              (dna)
+              |(employer)
+              |(female)
+              |((?:disallow_)?random_traits)
+              |(genetic_father)
+              |(genetic_mother)
+              |(historical)
+              |(immortal_age)
+              |(name)
+              |(flag)
+              |(father)
+              |(real_father)
+              |(mother)
+              |(properties)
+              |(diplomacy)
+              |(martial)
+              |(stewardship)
+              |(intrigue)
+              |(learning)
+              |(occluded)
+              |(birth)
+
+            )
+          \\b
+          (?!\\s*=\\s*\\{)
+          '
+      }
+    ]
+  numbers:
+    patterns: [
+      {
+        name: 'constant.numeric.date.ck2'
+        match: '(?xi)
+          \\b
+            \\d{1,4}
+            \\.
+            \\d{1,2}
+            \\.
+            \\d{1,2}
+          \\b
+          '
+      }
+      {
+        captures:
+          0: name: 'constant.numeric.float.ck2'
+          1: name: 'invalid.illegal.outofbounds.ck2'
+        match: '(?xi)
+          \\b
+            \\d+
+            \\.
+            \\d{,3}
+            (\\d*)
+          \\b
+          '
+      }
+      {
+        name: 'constant.numeric.float.ck2'
+        match: '(?xi)
+          \\b
+            \\d+
+            \\.
+            \\d{1,3}
+          \\b
+          (?!\\.)
+          '
+      }
+      {
+        name: 'constant.numeric.int.ck2'
+        match: '(?xi)
+          \\b
+            \\d+
+          \\b
+          '
+      }
+    ]
+  strings:
+    patterns: [
+      { include: '#quoted_strings' }
+    ]
+  unquoted_strings:
+    patterns: [
+      {
+        captures:
+          1: name: 'string.unquoted.event_text.ck2'
+        match: '(?x)
+          \\b
+            (EVT[[:word:].]+)
+          \\b
+          '
+      }
+      {
+        captures:
+          1: name: 'string.unquoted.gfx_key.ck2'
+        match: '(?x)
+          \\b
+            (GFX_[[:word:].]+)
+          \\b
+          '
+      }
+      { include: '#loc_keys' }
+    ]
+  escape_characters:
+    patterns: [
+      {
+        captures:
+          1: name: 'constant.character.escape.ck2'
+          2: name: 'punctuation.definition.escape.slash.back.ck2'
+        match: '(?xi)
+          (
+            (\\\\).
+          )
+          '
+      }
+    ]
+  quoted_strings:
+    patterns: [
+      {
+        name: 'string.quoted.double.ck2'
+        beginCaptures:
+          0: name: 'punctuation.definition.string.begin.double.quote.ck2'
+        begin: '"'
+        endCaptures:
+          0: name: 'punctuation.definition.string.end.double.quote.ck2'
+        end: '"'
+        patterns: [
+          { include: '#lineComment' }
+          { include: '#escape_characters' }
+          { include: '#loc_keys' }
+        ]
+      }
+      {
+        name: 'string.quoted.single.ck2'
+        beginCaptures:
+          0: name: 'punctuation.definition.string.begin.single.quote.ck2'
+        begin: '\''
+        endCaptures:
+          0: name: 'punctuation.definition.string.end.single.quote.ck2'
+        end: '\''
+        patterns: [
+          { include: '#lineComment' }
+          { include: '#escape_characters' }
+          { include: '#loc_keys' }
+        ]
+      }
+    ]
+  loc_keys:
+    patterns: [
+      {
+        contentName: 'string.interpolated.loc_key.ck2'
+        beginCaptures:
+          1: name: 'punctuation.definition.loc_key.begin.bracket.square.ck2'
+        begin: '(?xi)
+            (\\[)
+          \\b
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.loc_key.end.bracket.square.ck2'
+        end: '(?xi)
+          \\b
+            (\\])
+          '
+        patterns: [
+          { include: '#lineComment' }
+          {
+            name: 'invalid.illegal.stray_period.ck2'
+            match: '(?xi)
+              (
+              (?<!\\w)
+                \\.
+                |\\.
+              (?!\\w)
+              )
+              '
+          }
+          {
+            name: 'entity.name.tag.loc_key.ck2'
+            match: '\\w+'
+          }
+          {
+            name: 'illegal.invalid.stray-whitespace.ck2'
+            match: '\\s+'
+          }
+        ]
+      }
+    ]
+  events:
+    patterns: [
+      {
+        contentName: 'meta.event.block.ck2'
+        beginCaptures:
+          1: name: 'keyword.control.event.definition.ck2'
+          2: name: 'entity.type.event.long_character.ck2'
+          3: name: 'entity.type.event.character.ck2'
+          4: name: 'entity.type.event.province.ck2'
+          5: name: 'entity.type.event.letter.ck2'
+          6: name: 'entity.type.event.narrative.ck2'
+          7: name: 'entity.type.event.diploresponse.ck2'
+          8: name: 'entity.type.event.unit.ck2'
+          9: name: 'entity.type.event.society_quest.ck2'
+          10: name: 'punctuation.definition.event.assignment.ck2'
+          11: name: 'punctuation.definition.event.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            (?:
+              (long_character)
+              |(character)
+              |(province)
+              |(letter)
+              |(narrative)
+              |(diploresponse)
+              |(unit)
+              |(society_quest)
+            )_event
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.event.end.bracket.curly'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          {
+            captures:
+              1: name: 'keyword.control.event.flags.ck2'
+            match: '(?xi)
+              \\b
+              (
+                id
+                |border
+                |major
+                |is_(?:friendly|hostile|triggered_only)
+                |triggered_from_code|hide_(?:from|window|new)|show(?:_root|_from{1,3})
+                |sound
+                |title
+                |notification
+              )
+              \\b'
+          }
+          {
+            captures:
+              1: name: 'keyword.control.event.flags.ck2'
+            match: '(?xi)
+              \\b
+              (
+                (?:picture
+                (?=
+                \\s*
+                    =
+                \\s*
+                    ["\\[\\w]
+                    ["\\]\\[\\w]
+                )
+                )
+                |(?:desc
+                (?=
+                \\s*
+                  =
+                \\s*
+                  ["\\[\\w]
+                  ["\\]\\[\\w]
+                )
+                )
+              )
+              \\b'
+          }
+          {
+            captures:
+              1: name: 'keyword.control.event.pretriggers.ck2'
+            match: '(?xi)
+              \\b
+              (
+                ai
+                |prisoner
+                |rivals
+                |war
+                |capable_only
+                |friends
+                |(?:
+                  lacks
+                  |has
+                )_dlc
+                |(?:
+                  max
+                  |min
+                )_age
+                |culture(?:_group)?
+                |religion(?:_group)?
+                |has_(?:
+                  character
+                  |global
+                )_flag
+                |is_(?:
+                  female
+                  |married
+                  |pa(
+                    trician
+                    |rt_of_plot
+                  )
+                  |sick
+                )
+                |only_(?:
+                  capable
+                  |independent
+                  |(?:wo)?men
+                  |playable
+                  |rulers
+                )
+              )
+              \\b'
+          }
+          {
+            contentName: 'meta.desc.block.ck2'
+            beginCaptures:
+              0: name: 'entity.type.event.flags.desc.ck2'
+              1: name: 'keyword.control.event.flags.desc.ck2'
+              2: name: 'punctuation.definition.desc.assignment.equals.ck2'
+              3: name: 'punctuation.definition.desc.begin.bracket.curly.ck2'
+            begin: '(?xi)
+              \\b
+                (desc)
+              \\s*
+                (=)
+              \\s*
+                (\\{)
+              '
+            endCaptures:
+              1: name: 'punctuation.definition.desc.end.bracket.curly'
+            end: '(?xi)
+                (\\})
+              '
+            patterns: [
+              {
+                captures:
+                  1: name: 'variable.language.condition.text.ck2'
+                match: '(?xi)
+                  \\b
+                    (text)
+                  (?=
+                  \\s*
+                    =
+                  \\s*
+                    ["\\[\\w]
+                    ["\\]\\[\\w]
+                  )
+                  '
+              }
+              {
+                captures:
+                  1: name: 'variable.language.condition.picture.ck2'
+                match: '(?xi)
+                  \\b
+                    (picture)
+                  (?=
+                  \\s*
+                    =
+                  \\s*
+                    ["\\[\\w]
+                    ["\\]\\[\\w]
+                  )
+                  '
+              }
+              { include: '#trigger_clause' }
+
+              { include: '#global_includes' }
+            ]
+          }
+          {
+            contentName: 'meta.event.timing.block.ck2'
+            beginCaptures:
+              1: name: 'keyword.control.event.timing.ck2'
+              2: name: 'entity.type.event.timing.weight_multiplier.ck2'
+              3: name: 'entity.type.event.timing.mean_time.ck2'
+              4: name: 'punctuation.definition.event.timing.assignment.equals.ck2'
+              5: name: 'punctuation.definition.event.timing.begin.bracket.curly.ck2'
+            begin: '(?xi)
+              \\b
+                (
+                  (weight_multiplier)
+                  |(mean_time_to_happen)
+                )
+              \\s*
+                (=)
+              \\s*
+                (\\{)
+              '
+            endCaptures:
+              1: name: 'punctuation.definition.event.timing.end.bracket.curly'
+            end: '(?xi)
+                (\\})
+              '
+            patterns: [
+              { include: '#condition_clause' }
+              { include: '#modifier_clause' }
+              { include: '#global_includes' }
+            ]
+          }
+          {
+            contentName: 'meta.immediate.block.ck2'
+            beginCaptures:
+              0: name: 'entity.type.event.command.immediate.ck2'
+              1: name: 'keyword.control.immediate.ck2'
+              2: name: 'punctuation.definition.immediate.assignment.equals.ck2'
+              3: name: 'punctuation.definition.immediate.begin.bracket.curly.ck2'
+            begin: '(?xi)
+              \\b
+                (immediate)
+              \\s*
+                (=)
+              \\s*
+                (\\{)
+              '
+            endCaptures:
+              1: name: 'punctuation.definition.immediate.end.bracket.curly'
+            end: '(?xi)
+              (\\})
+              '
+            patterns: [
+              { include: '#effect_clause' }
+              { include: '#global_includes' }
+            ]
+          }
+          {
+            contentName: 'meta.option.block.ck2'
+            beginCaptures:
+              0: name: 'entity.type.event.command.option.ck2'
+              1: name: 'keyword.control.option.ck2'
+              2: name: 'punctuation.definition.option.assignment.equals.ck2'
+              3: name: 'punctuation.definition.option.begin.bracket.curly.ck2'
+            begin: '(?xi)
+              \\b
+                (option)
+              \\s*
+                (=)
+              \\s*
+                (\\{)
+              '
+            endCaptures:
+              1: name: 'punctuation.definition.option.end.bracket.curly'
+            end: '(?xi)
+                (\\})
+              '
+            patterns: [
+              {
+                captures:
+                  1: name: 'variable.language.condition.name.ck2'
+                match: '(?xi)
+                  \\b
+                    (name)
+                  (?=
+                  \\s*
+                    =
+                  \\s*
+                    ["\\[\\w]
+                    ["\\]\\[\\w]
+                  )
+                  '
+              }
+              {
+                captures:
+                  1: name: 'variable.language.condition.tooltip_info.ck2'
+                match: '(?xi)
+                  \\b
+                    (tooltip_info)
+                  (?=
+                  \\s*
+                    =
+                  \\s*
+                    ["\\[\\w]
+                    ["\\]\\[\\w]
+                  )
+                  '
+              }
+              {
+                contentName: 'meta.name.block.ck2'
+                beginCaptures:
+                  0: name: 'entity.type.event.option.name_block.ck2'
+                  1: name: 'keyword.control.name.ck2'
+                  2: name: 'punctuation.definition.name.assignment.equals.ck2'
+                  3: name: 'punctuation.definition.name.begin.bracket.curly.ck2'
+                begin: '(?xi)
+                  \\b
+                    (name)
+                  \\s*
+                    (=)
+                  \\s*
+                    (\\{)
+                  '
+                endCaptures:
+                  1: name: 'punctuation.definition.name.end.bracket.curly'
+                end: '(?xi)
+                    (\\})
+                  '
+                patterns: [
+                  {
+                    captures:
+                      1: name: 'variable.language.condition.text.ck2'
+                    match: '(?xi)
+                    \\b
+                      (text)
+                    (?=
+                    \\s*
+                      =
+                    \\s*
+                      ["\\[\\w]
+                      ["\\]\\[\\w]
+                    )
+                    '
+                  }
+                  { include: '#trigger_clause' }
+                  { include: '#global_includes' }
+                ]
+              }
+              { include: '#effect_clause' }
+              { include: '#trigger_clause' }
+              { include: '#ai_chance' }
+              { include: '#global_includes' }
+            ]
+          }
+          {
+            contentName: 'meta.after.block.ck2'
+            beginCaptures:
+              0: name: 'entity.type.event.command.after.ck2'
+              1: name: 'keyword.control.after.ck2'
+              2: name: 'punctuation.definition.after.assignment.equals.ck2'
+              3: name: 'punctuation.definition.after.begin.bracket.curly.ck2'
+            begin: '(?xi)
+              \\b
+                (after)
+              \\s*
+                (=)
+              \\s*
+                (\\{)
+              '
+            endCaptures:
+              1: name: 'punctuation.definition.after.end.bracket.curly'
+            end: '(?xi)
+                (\\})
+              '
+            patterns: [
+              { include: '#effect_clause' }
+              { include: '#global_includes' }
+            ]
+          }
+          { include: '#trigger_clause' }
+          { include: '#quoted_strings' }
+          { include: '#global_includes' }
+          # { include: '$self' }
+        ]
+      }
+    ]
+  ai_chance:
+    patterns: [
+      {
+        contentName: 'meta.ai_chance.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.ai_chance.ck2'
+          1: name: 'keyword.control.ai_chance.ck2'
+          2: name: 'punctuation.definition.ai_chance.assignment.ck2'
+          3: name: 'punctuation.definition.ai_chance.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (ai_chance)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.ai_chance.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#condition_clause' }
+          { include: '#modifier_clause' }
+          { include: '#global_includes' }
+        ]
+      }
+    ]
+  on_actions:
+    patterns: [
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.character.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+              acquire_nickname
+              |ad(?:
+                  ulthood
+                  |olescence
+                )
+              |artifact_inheritance
+              |avoided_imprison_fled_country
+              |become_imprisoned_any_reason
+              |became_imprisoned
+              |character_convert_(?:
+                culture
+                |(?:secret_)?religion
+              )
+              |divorce
+              |ex(?:
+                ecuted
+                |iled
+              )
+              |forced_consort
+              |marriage
+              |player_mercenary_income
+              |(?:post_)?birth
+              |pregnancy
+              |released_from_prison
+              |focus_selected
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.control.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+              chronicle_(?:
+                owner_change
+                |start
+              )
+              |create_chronicle_if_empty
+              |startup
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.holding.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+              (?:
+                fort|settlement
+                |hospital
+                |trade_post
+              )_construction_(?:
+                completed
+                |start
+              )
+              |holding_building_start
+              |loot_settlement
+              |settlement_looted
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+          { include: '#lineComment' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.plot.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:failed_)?assassination(?:_disc)?
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.province.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+              loot_province
+              |province_major_modifier
+              |outbreak
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.pulse.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+              adolescence
+              |decade
+              |five_year
+              |focus
+              |(?:yearly_)?childhood
+              |(?:bi_)?yearly
+            )_pulse
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.realm.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            councilor_on_approve_law
+            |on_(?:
+              approve(_de_jure)?_law
+              |law_vote_(?:
+                failed
+                |passed
+              )
+              |enforce_peace
+              |enforce_peace_(?:
+                six_vassals
+                |start
+              )
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.relations.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+              ai_end_raid
+              |blood_brother_death
+              |feud_(?:
+                started
+                |ended
+              )
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+        (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.religion.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+              county_religion_change
+              |heresy_takeover
+              |reform_religion
+              |rel_(?:
+                  elector
+                  |head
+              )_chosen
+              |vassal_accepts_religious_conversion
+              |crusade_(?:
+                creation
+                |failure
+                |invalid
+                |success
+              )
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.succession.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+              become_doge
+              |create_title
+              |death
+              |elective_gavelkind_succession
+              |new_holder(?:
+                _(?:
+                  inheritance
+                  |usurpation
+                )
+              )?
+              |over_vassal_limit_succession
+              |unlanded
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.units.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+              entering_port
+              |navy_returns_with_loot
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.war.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+              rebel_revolt
+              |holy_order_leave
+              |(?:
+                combat
+                |siege
+              )_pulse
+              |avoided_imprison_started_war
+              |defect_(?:
+                from
+                |to
+              )_rebels
+              |battle_(?:
+                lost
+                |won
+              )
+              (?:
+                _(?:
+                  leader
+                  |owner
+                )
+              )?
+              |major_battle_(?:
+                lost
+                |won
+              )(?:
+                _leader
+              )?
+              |merc_(?:
+                turn_coat_(?:
+                  from
+                  |to
+                )
+                |leave
+                |rampage
+              )
+              |mercenary_(?:
+                captain_replacement
+                |dismissed
+                |hired
+              )
+              |prepared_invasion_(?:
+                aborts
+                |expires
+                |monthly
+              )
+              |siege_(?:
+                (?:
+                  won
+                  |lost
+                )_leader
+                |over_(?:
+                  loc_chars
+                  |winner
+                )
+              )
+              |war(?:
+                _ended_(?:
+                  whitepeace
+                  |victory
+                  |invalid
+                  |defeat
+                )
+                |_started
+                |leader_death
+              )
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.interaction.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            (?:
+              demand_religious_conversion
+              |revoke_title
+              |send_gift
+              |nominate_bishop_to_pope
+              |arrange(?:_succ)?_betrothal
+              |offer_(?:
+                peace
+                |vassalization
+                |(?:succession_)?marrige
+                |consort
+              )
+              |(?:
+                educate
+                |ransom
+              )_character
+              |(?:
+                stop_backing
+                |abandon
+                |join
+              )_ambition
+              |(?:
+                grant_landed
+                |revoke
+              )_title
+              |appoint_to_office
+              |call_ally
+              |declare_war
+              |retract_vassal
+              |invite_to_court
+              |ask_(?:
+                for_(?:
+                  money
+                  |claim
+                  |excommunication
+                  |invasion
+                  |divorce
+                  |vassalization
+                )
+                |to_(?:
+                  lift_excommunication
+                  |ransom_character
+                  |join_(?:
+                    ambition
+                    |war
+                  )
+                  |embargo
+                )
+                |council_position
+                |realm_peace
+                )
+              |settle_(?:
+                  adventurer
+                  |feud
+              )
+              |make_consort
+              |(?:
+                absorb
+                |split
+              )_clan
+              |form_(?:
+                non_aggression_pact
+                |blood_oath
+              )
+              |(?:
+                form
+                |dissolve
+              )_alliance
+              |buy_favor
+              |request_support
+              |force_join_faction
+              |give_artifact
+            )
+            _interaction_(?:
+              accept
+              |decline
+            )_event
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.event_message.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+              letter
+              |character
+            )_event_message
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.societies.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+              character_(?:
+                society_rank_(?:
+                  down
+                  |up
+                )
+                |(?:
+                  (?:ask_to_)?join
+                  |kicked_from
+                  |leave
+                )_society
+                |(?:
+                  stop_showing
+                  |switch_society
+                )_interest
+              )
+              |society_(?:
+                created
+                |destroyed
+                |failed_to_find_new_leader
+                |bi_yearly_pulse
+              )
+              |quest_(?:
+                success
+                |failure
+              )
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.offmap_power.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_offmap_(?:
+              (?:
+                policy
+                |status
+                |governor
+                |ruler
+              )_changed
+              |(?:
+                monthly
+                |yearly
+              )_pulse
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.eu4_conversion.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_eu4_conversion_(?:
+              start
+              |done
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.tyranny_gain.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_tyranny_gained(_tyrant_only)?
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+      {
+        contentName: 'meta.on_action.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.on_action.revolting.ck2'
+          1: name: 'keyword.control.on_action.ck2'
+          2: name: 'punctuation.definition.on_action.assignment.equals.ck2'
+          3: name: 'punctuation.definition.on_action.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            on_(?:
+                re(?:
+                  tract_vassal
+                  |voke
+                )
+                |(?:
+                  absorb
+                  |split
+                )_clan
+              )_attempted_started_war
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#on_action_clause' }
+        ]
+      }
+    ]
+  on_action_clause:
+    patterns: [
+      {
+        contentName: 'meta.on_action_events.block.ck2'
+        beginCaptures:
+          1: name: 'keyword.control.on_action_events.ck2'
+          2: name: 'entity.type.on_action.events.ck2'
+          3: name: 'entity.type.on_action.random_events.ck2'
+          4: name: 'punctuation.definition.on_action_events.assignment.ck2'
+          5: name: 'punctuation.definition.on_action_events.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (
+              (random_events)
+              |(events)
+            )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.on_action_events.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#global_includes' }
+        ]
+      }
+      { include: '#global_includes' }
+    ]
+  trigger_clause:
+    patterns: [
+      {
+        contentName: 'meta.trigger.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.trigger.ck2'
+          1: name: 'keyword.control.trigger.ck2'
+          2: name: 'punctuation.definition.trigger.assignment.equals.ck2'
+          3: name: 'punctuation.definition.trigger.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (trigger)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.trigger.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#condition_clause' }
+          { include: '#global_includes' }
+        ]
+      }
+    ]
+  limit_clause:
+    patterns: [
+      {
+        contentName: 'meta.limit.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.limit.ck2'
+          1: name: 'keyword.control.limit.ck2'
+          2: name: 'punctuation.definition.limit.assignment.equals.ck2'
+          3: name: 'punctuation.definition.limit.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (limit)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.limit.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#condition_clause' }
+          { include: '#global_includes' }
+        ]
+      }
+    ]
+  modifier_clause:
+    patterns: [
+      {
+        contentName: 'meta.modifier.ck2'
+        beginCaptures:
+          0: name: 'entity.type.modifier.ck2'
+          1: name: 'control.keyword.modifier.ck2'
+          2: name: 'punctuation.definition.modifier.assignment.equals.ck2'
+          3: name: 'punctuation.definition.modifier.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (modifier)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.modifier.end.bracket.curly'
+        end: '(?xi)
+          (\\})
+        '
+        patterns: [
+          { include: '#condition_clause' }
+          { include: '#global_includes' }
+        ]
+      }
+    ]
+  condition_clause: #includes all the repositories that go inside triggers and limits
+    patterns: [
+      {
+        captures:
+          1: name: 'keyword.control.show_only_failed.ck2'
+        match: '(?xi)
+          \\b
+            (show_only_failed_conditions)
+          \\b
+          '
+      }
+      {
+        contentName: 'meta.logic.block.ck2'
+        beginCaptures:
+          1: name: 'constant.language.logical.ck2'
+          2: name: 'entity.type.logical.not.ck2'
+          3: name: 'entity.type.logical.and.ck2'
+          4: name: 'entity.type.logical.or.ck2'
+          5: name: 'punctuation.definition.logical.assignment.equals.ck2'
+          6: name: 'punctuation.definition.logical.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            (NOT)
+            |(AND)
+            |(OR)
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.logical.end.bracket.curly.ck2'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          { include: '#condition_clause' }
+          { include: '#global_includes' }
+        ]
+      }
+      { include: '#scopes' }
+      { include: '#conditions' }
+      { include: '#condition_tooltips' }
+      { include: '#new_char_conditions' }
+      {
+        contentName: 'meta.condition.block.ck2'
+        beginCaptures:
+          1: name: 'punctuation.definition.clause.assignment.equals.ck2'
+          2: name: 'punctuation.definition.clause.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          (?<=\\w)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.clause.end.bracket.curly.ck2'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          { include: '#condition_clause' }
+          { include: '#effect_clause' }
+        ]
+      }
+      { include: '#global_includes' }
+    ]
+  effect_clause: #includes all the repositories that go inside clauses that perform actions: immediate, option, after, effect, etc.
+    patterns: [
+      { include: '#scopes' }
+      { include: '#control_flow' }
+      { include: '#effect_tooltips' }
+      { include: '#effects' }
+      {
+        contentName: 'meta.effect.block.ck2'
+        beginCaptures:
+          1: name: 'punctuation.definition.clause.assignment.equals.ck2'
+          2: name: 'punctuation.definition.clause.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.clause.end.bracket.curly.ck2'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          { include: '#effect_clause' }
+          { include: '#condition_clause' }
+          { include: '#limit_clause' }
+        ]
+      }
+      { include: '#global_includes' }
+    ]
+  scopes:
+    patterns: [
+      {
+          captures:
+            1: name: 'support.function.scope.title.ck2'
+          match: '(?xi)
+            \\b
+            (
+              ANY_CLAIM|ANY_DE_JURE_VASSAL_TITLE|ANY_DEMESNE_TITLE
+              |ANY_DIRECT_DE_JURE_VASSAL_TITLE|ANY_HEIR_TITLE|ANY_LANDED_TITLE
+              |ANY_MERCENARY_BAND|ANY_POTENTIAL_TRIBAL_COUNTY|ANY_PRETENDER_TITLE
+              |ANY_PROVINCE_HOLDING|ANY_QUEST_TARGET|ANY_REALM_TITLE|ANY_TITLE
+              |BLOOD_BROTHER|CAPITAL_HOLDING|CLAN_TITLE|COUNTY|CROWNLAW_TITLE
+              |CRUSADE_TARGET|DEFACTO_LIEGE_TITLE|DEJURE_LIEGE_TITLE|DUCHY|EMPIRE
+              |FAMILY_PALACE|GOVERNOR_TITLE|INVASION_TARGET|KINGDOM|NEW_TITLE
+              |PLOT_TARGET_TITLE|PRIMARY_TITLE|QUEST_TARGET|RANDOM_CLAIM
+              |RANDOM_DEMESNE_TITLE|RANDOM_DIRECT_DE_JURE_VASSAL_TITLE
+              |RANDOM_LANDED_TITLE|RANDOM_POTENTIAL_TRIBAL_COUNTY
+              |RANDOM_PROVINCE_HOLDING|RANDOM_QUEST_TARGET|RANDOM_REALM_TITLE|REALM
+              |SUCC_LAW_TITLE|SUPPORTED_CLAIMANT_TITLE|THIRDPARTY_TITLE_SCOPE
+            )
+            \\b
+            '
+      }
+      {
+          captures:
+            1: name: 'support.function.scope.character.ck2'
+          match: '(?xi)
+            \\b
+            (
+              ANY_ALLIED_CHARACTER|ANY_ATTACKER|ANY_BACKED_CHARACTER|ANY_CHARACTER
+              |ANY_CHILD|ANY_CHILD_EVEN_IF_DEAD|ANY_CLAIMANT|ANY_CLOSE_RELATIVE
+              |ANY_COURTIER|ANY_COURTIER_OR_VASSAL|ANY_CURRENT_ENEMY|ANY_DE_JURE_VASSAL
+              |ANY_DEFENDER|ANY_DYNASTY_MEMBER|ANY_DYNASTY_MEMBER_EVEN_IF_DEAD
+              |ANY_ENEMY_PLOTTER|ANY_FACTION_BACKER|ANY_FAVOR_HOLDER|ANY_FAVOR_OWER
+              |ANY_FRIEND|ANY_HOST_COURTIER|ANY_INDEPENDENT_RULER|ANY_KNOWN_ENEMY_PLOTTER
+              |ANY_KNOWN_PLOTTER|ANY_LIEGE|ANY_LOVER|ANY_NEIGHBOR_INDEPENDENT_RULER
+              |ANY_NON_AGGRESSION_PACT_CHARACTER|ANY_OPINION_MODIFIER_TARGET
+              |ANY_PLAYABLE_RULER|ANY_PLAYER|ANY_PLOT_BACKER|ANY_PLOTTER
+              |ANY_PREVIOUS_HOLDER|ANY_PROVINCE_CHARACTER|ANY_PROVINCE_LORD|ANY_PUPIL
+              |ANY_QUESTER|ANY_QUESTER_TARGETING_THIS|ANY_QUESTER_TARGETTING_THIS
+              |ANY_QUEST_TARGET|ANY_REALM_CHARACTER|ANY_REALM_LORD|ANY_RIVAL|ANY_SIBLING
+              |ANY_SIBLING_EVEN_IF_DEAD|ANY_SOCIETY_MEMBER|ANY_SPOUSE
+              |ANY_SPOUSE_EVEN_IF_DEAD|ANY_CONSORT|ANY_SUZERAIN|ANY_TRIBUTARY
+              |ANY_UNIQUE_DYNASTY_VASSAL|ANY_UNKNOWN_ENEMY_PLOTTER|ANY_VASSAL
+              |ANY_VOTER|ANY_WARD|ARTIFACT_OWNER|ATTACKER|BAND_CREATOR
+              |BEST_CRUSADE_CLAIMANT|BIGGEST_REALM_SIZE_RELATIVE|CENTER_FLANK_LEADER
+              |LEFT_FLANK_LEADER|RIGHT_FLANK_LEADER|CONTROLLER|CURRENT_HEIR|DEFENDER
+              |DYNASTY_HEAD|EDUCATOR|EMPLOYER|ENEMY|FATHER|FATHER_EVEN_IF_DEAD
+              |FATHER_OF_UNBORN|GUARDIAN|GOVERNOR|HEIR_UNDER_SENIORITY_LAW
+              |HEIR_UNDER_PRIMOGENITURE_LAW|HIGHEST_RANKED_RELATIVE|HOLDER_SCOPE
+              |HOSPITAL_OWNER|HOST|JOB_CHANCELLOR|JOB_MARSHAL|JOB_TREASURER
+              |JOB_SPYMASTER|JOB_SPIRITUAL|KILLER|LEADER|LIEGE|LIEGE_BEFORE_WAR|LOVER
+              |MERCENARY_EMPLOYER|MOST_PARTICIPATING_ATTACKER|MOST_PARTICIPATING_CRUSADER
+              |MOST_PARTICIPATING_DEFENDER|MOST_POPULAR_VASSAL
+              |MOST_PRESTIGIOUS_CLAN_VASSAL|MOTHER|MOTHER_EVEN_IF_DEAD|NEW_CHARACTER
+              |OFFMAP_PREV_RULER|OFFMAP_RULER|ORIGINAL_ARTIFACT_OWNER|ORIGINAL_OWNER|OWNER
+              |PARENT_RELIGION_HEAD|PLAYER_HEIR|PLOT_TARGET_CHAR|PREFERRED_WAR_TARGET
+              |QUEST_TARGET|RANDOM_ALLIED_CHARACTER|RANDOM_BACKED_CHARACTER
+              |RANDOM_CHARACTER|RANDOM_CHILD|RANDOM_CHILD_EVEN_IF_DEAD
+              |RANDOM_CLOSE_RELATIVE|RANDOM_COURTIER|RANDOM_CURRENT_ENEMY
+              |RANDOM_DYNASTY_MEMBER|RANDOM_DYNASTY_MEMBER_EVEN_IF_DEAD
+              |RANDOM_ENEMY_PLOTTER|RANDOM_FRIEND|RANDOM_HOST_COURTIER
+              |RANDOM_INDEPENDENT_RULER|RANDOM_KNOWN_ENEMY_PLOTTER|RANDOM_LOVER
+              |RANDOM_NEIGHBOR_INDEPENDENT_RULER|RANDOM_NON_AGGRESSION_PACT_CHARACTER
+              |RANDOM_OPINION_MODIFIER_TARGET|RANDOM_PLAYABLE_RULER|RANDOM_PLAYER
+              |RANDOM_PROVINCE_CHARACTER|RANDOM_PROVINCE_LORD|RANDOM_PUPIL|RANDOM_QUESTER
+              |RANDOM_QUESTER_TARGETTING_THIS|RANDOM_QUEST_TARGET|RANDOM_REALM_CHARACTER
+              |RANDOM_REALM_LORD|RANDOM_RIVAL|RANDOM_SIBLING|RANDOM_SIBLING_EVEN_IF_DEAD
+              |RANDOM_SOCIETY_MEMBER|RANDOM_SPOUSE|RANDOM_SPOUSE_EVEN_IF_DEAD
+              |RANDOM_CONSORT|RANDOM_TRIBUTARY|RANDOM_UNKNOWN_ENEMY_PLOTTER|RANDOM_VASSAL
+              |RANDOM_VOTER|RANDOM_WARD|REAL_FATHER|REAL_FATHER_EVEN_IF_DEAD
+              |REINCARNATION_SCOPE|REGENT|RELIGION_HEAD|RIGHTFUL_RELIGIOUS_HEAD_SCOPE
+              |RULER|SPOUSE|SPOUSE_EVEN_IF_DEAD|STRONGEST_CLAN_VASSAL|SUPPORTED_CLAIMANT
+              |SUZERAIN|TITLE_TO_GET_RID_OF|TOP_LIEGE|TRADE_POST_OWNER
+            )
+            \\b
+            (?=\\s*=\\s*\\{)
+            '
+      }
+      {
+          captures:
+            1: name: 'support.function.scope.province.ck2'
+          match: '(?xi)
+            \\b
+            (
+              ANY_DEMESNE_PROVINCE|ANY_NEIGHBOR_PROVINCE|ANY_PROVINCE|ANY_FORT
+              |ANY_HOSPITAL|ANY_QUEST_TARGET|ANY_REALM_PROVINCE|ANY_TRADE_POST
+              |ANY_TRADE_ROUTE_PROVINCE|CAPITAL_SCOPE|LOCATION|PLOT_TARGET_PROVINCE
+              |QUEST_TARGET|RANDOM_DEMESNE_PROVINCE|RANDOM_NEIGHBOR_PROVINCE
+              |RANDOM_PROVINCE|RANDOM_QUEST_TARGET|RANDOM_REALM_PROVINCE
+              |RANDOM_TRADE_POST|SEA_ZONE
+            )
+            \\b'
+      }
+      {
+          captures:
+            1: name: 'support.function.scope.offmap_power.ck2'
+          match: '(?xi)
+            \\b
+              (
+                OFFMAP_\\d+
+              )
+            \\b
+            '
+      }
+      {
+          captures:
+            1: name: 'support.function.scope.war.ck2'
+          match: '(?xi)
+            \\b
+              (ANY_WAR)
+            \\b
+            '
+      }
+      {
+          captures:
+            1: name: 'support.function.scope.siege.ck2'
+          match: '(?xi)
+            \\b
+              (SIEGE)
+            \\b
+            '
+      }
+      {
+          captures:
+            1: name: 'support.function.scope.unit.ck2'
+          match: '(?xi)
+            \\b
+            (
+              ANY_ARMY|ANY_CONTROLLED_UNIT|ANY_FLEET|ANY_UNIT|RANDOM_ARMY
+              |RANDOM_CONTROLLED_UNIT|RANDOM_FLEET|RANDOM_UNIT
+            )
+            \\b
+            '
+      }
+      {
+          captures:
+            1: name: 'support.function.scope.religion.ck2'
+          match: '(?xi)
+            \\b
+            (
+              RELIGION_SCOPE|SECRET_RELIGION_SCOPE|TRUE_RELIGION_SCOPE
+            )
+            \\b
+            '
+      }
+      {
+          captures:
+            1: name: 'support.function.scope.culture.ck2'
+          match: '(?xi)
+            \\b
+              (CULTURE_SCOPE)
+            \\b
+            '
+      }
+      {
+          captures:
+            1: name: 'support.function.scope.society.ck2'
+          match: '(?xi)
+            \\b
+              (SECRET_RELIGIOUS_CULT)
+            \\b
+            '
+      }
+      {
+          captures:
+            1: name: 'support.function.scope.artifact.ck2'
+          match: '(?xi)
+            \\b
+            (
+              ANY_ARTIFACT|RANDOM_ARTIFACT|NEW_ARTIFACT
+            )
+            \\b
+            '
+      }
+      { # Used for matching scope changes
+          captures:
+            1: name: 'support.function.scope.stack.ck2'
+          match: '(?xi)
+            \\b
+            (
+              ROOT
+              |FROM(?:FROM){,3}
+              |PREV(?:PREV){,3}
+              |THIS
+            )
+            (?=
+              \\s*
+              =
+              \\s*
+              \\{
+            )
+            '
+      }
+      { # Used for matching province scope changes
+          captures:
+            1: name: 'support.function.scope.province.ck2'
+          match: '(?xi)
+            \\b
+            (
+              \\d+
+            )
+            (?=
+              \\s*
+              =
+              \\s*
+              \\{
+            )
+            '
+      }
+    ]
+  conditions:
+    patterns: [
+      {
+        captures:
+          1: name: 'variable.language.condition.clause_conditions.ck2'
+        match: '(?xi)
+          \\b
+          (
+            who
+            |attribute
+            |value
+            |amount
+            |target
+            |casus_belli
+            |thirdparty_title
+            |only_check_triggers
+            |which
+            |faction
+            |thirdparty
+            |modifier
+            |power
+            |first_type
+            |first_count_vassals
+            |second_type
+            |society
+            |rank
+            |than
+            |as_if_liege
+            |first
+            |second
+            |percentage
+            |size
+            |strong
+            |indirectly_owned
+            |type
+            |enemy
+            |law
+            |min
+            |max
+          )
+          (?!.+\\{)
+          '
+      }
+      {
+        captures:
+          1: name: 'keyword.control.event.id.ck2'
+        match: '(?xi)
+          \\b
+          (id)
+          \\b
+          (?=\\s*=\\s*(?:\\w|\\d))'
+      }
+      {
+        name: 'variable.language.condition.artifacts.ck2'
+        match: '(?xi)
+          \\b
+          (
+            artifact_(?:
+              age
+              |can_be_gifted_to
+              |type(_owned_by)?
+            )
+            |has_(
+              artifact(?:_flag)?
+              |known_creation_date
+            )
+            |is_(?:
+              indestructible
+              |artifact_(?:
+                active
+                |equipped
+              )
+              |same_type_as
+            )
+            |num_of_artifacts
+            |quality
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.buildings.ck2'
+        match: '(?xi)
+          \\b
+            (
+              hospital_has(?:_any)?_building
+              |trade_post_has(?:_any)?_building
+            )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.factors.ck2'
+        match: '(?xi)
+          \\b
+          (
+            factor
+            |days
+            |months
+            |years
+            |weeks
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.characters.ck2'
+        match: '(?xi)
+          \\b
+          (
+            age(?:_diff)?
+            |ai(?:
+              _ambition
+              |_greed
+              |_honor
+              |_rationality
+              |_zeal
+            )?
+            |at_location
+            |attribute_diff
+            |can_hold_title
+            |character
+            |combat_rating(?:_diff)?
+            |(?:uses_)?decadence
+            |diploma(?:
+              cy
+              |tic_immunity
+            )
+            |dynasty
+            |fertility
+            |graphical_culture
+            |has_(?:
+              (?:any_)?opinion_modifier
+              |any_quest
+              |(?:assigned_)?minor_title
+              |(?:living_)?children
+              |portrait_property
+            )
+            |imprisoned_days
+            |in_command
+            |intrigue
+            |could_be_parent_of
+            |is_(?:
+              (?:
+                ancestor
+                |grand(?:
+                  child
+                  |parent
+                )
+                |parent
+                |descendant
+                |cousin
+                |aunt_uncle
+                |nibling
+              )_of
+              |landed(?:_title_allowed)?
+              |heir
+              |lowborn
+              |older_than
+              |opposite_sex
+              |or_was_offmap_power_ruler
+              |pilgrim
+              |playable
+              |pregnant
+              |priest
+              |save_game
+              |seafarer
+              |abroad
+              |adult
+              |at_sea
+              |female
+              |dying
+            )
+            |(?:
+              day
+              |month
+              |year
+            )_of_birth
+            |learning
+            |martial
+            |monthly_(?:
+              piety
+              |prestige
+            )
+            |num_of_prisoners
+            |(?:
+              pays_tribute
+              |owes_favor
+            )_to
+            |pacifist
+            |piety
+            |prestige
+            |prisoner
+            |race
+            |rebel
+            |same_(?:
+              regnal_name|sex
+            )
+            |stewardship
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.claims.ck2'
+        match: '(?xi)
+          \\b
+          (
+            claimed_by
+            |has_(?:
+              weak_
+              |strong_
+            )?claim
+            |(?:
+              num_of
+              |total
+            )_claims
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.clans.ck2'
+        match: '(?xi)
+          \\b
+          (
+            clan
+            |has_(?:
+              blood_oath
+              |feud
+            )_with
+            |(?:
+              max
+              |unused
+            )_manpower
+            |num_of_feuds
+            |population(?:
+              _and_manpower
+              |_factor
+            )?
+            |reverse_clan_opinion
+            |risks_minor_clan_rising
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.control.ck2'
+        match: '(?xi)
+          \\b
+          (
+            always
+            |(?:
+              artifact
+              |_age
+            )
+            |check_variable
+            |count
+            |difficulty
+            |ha(?:
+              d
+              |s
+            )_
+            (?:
+              artifact
+              |dynasty
+              |province
+              |title
+              |character
+              |global
+            )_flag
+            |has_(?:
+              dlc
+              |earmarked_regiments(?:_not_raiding)?
+              |game_(?:
+                rule
+                |started
+              )
+            )
+            |is_(?:
+              ironman
+              |multiplayer_host_character
+              |variable_equal
+            )
+            |month
+            |multiplayer
+            |random
+            |real_month_of_year
+            |score
+            |start_date
+            |supported_checksum
+            |total_years_played
+            |year
+            |calc_true_if
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.council.ck2'
+        match: '(?xi)
+          \\b
+          (
+            has_(?:
+              council
+              |position
+            )
+            |is_(?:
+              council_content
+              |voter
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.culture.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              conquest
+              |has_horde
+            )_culture
+            |culture(?:_group)?
+            |num_culture_realm_provs
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.factions.ck2'
+        match: '(?xi)
+          \\b
+          (
+            faction_(?:
+              exists
+              |power
+            )
+            |(?:
+              in
+              |leads
+            )_faction
+            |num_of_faction_backers
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.family.ck2'
+        match: '(?xi)
+          \\b
+          (
+            dynast(?:
+              ic_prestige
+              |y_realm_power
+            )
+            |family
+            |father_of_unborn_known
+            |from_ruler_dynasty
+            |is_(?:
+              child_of
+              |close_relative
+              |father(?:_real_father)?
+              |mother
+              |reincarnated
+            )
+            |num_of_(?:
+              children
+              |dynasty_members
+            )
+            |sibling
+            |was_conceived_a_bastard
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.government.ck2'
+        match: '(?xi)
+        \\b
+        (
+          government
+          |has_(?:
+            crown_law_title
+            |law
+          )
+          |is_(?:
+            allowed_holding_type
+            |feudal
+            |government_potential
+            |(?:merchant_)?republic
+            |nomadic
+            |patrician
+            |theocracy
+            |tribal
+          )
+          |num_of_government_vassals
+          |would_be_heir_under_law
+        )
+        \\b'
+      }
+      {
+        name: 'variable.language.condition.guardianship.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              has
+              |is
+              |same
+            )_guardian
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.health.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:base_)?health
+            |death_reason
+            |has_(?:
+              any_symptom
+              |disease
+              |epidemic
+            )
+            |immortal
+            |is_(?:
+              alive
+              |ill
+              |incapable
+            )
+            |num_of_symptoms
+            |symptom
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.holdings.ck2.ck2'
+        match: '(?xi)
+          \\b
+          (
+            has_(?:
+              building
+              |settlement_construction
+            )
+            |holding_type
+            |num_of_buildings
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.jobs.ck2.ck2'
+        match: '(?xi)
+          \\b
+          (
+            can_swap_job_title
+            |has_(?:
+              job_action|job_title
+            )
+            |is_(?:
+              councillor
+              |treasurer
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.marriage.ck2'
+        match: '(?xi)
+          \\b
+          (
+            can_marry
+            |has_lover
+            |is_(?:
+              betrothed
+              |consort
+              |(?:former_)?lover
+              |main_spouse
+              |marri(?:
+                age_adult
+                |ed(_matrilineally)?
+              )
+              |valid_(?:
+                attraction
+                |romance_target
+              )
+            )
+            |num_of_(?:
+              consorts
+              |lovers
+              |society_members
+              |spouses
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.modifiers.ck2'
+        match: '(?xi)
+          \\b
+          (?:
+            has_(?:
+              nickname
+              |(?:
+                mercenary_maintenance
+                |(?:instances_of_)?
+                (?:
+                  character
+                  |province
+                  |holding
+                )
+              )_modifier
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.money.ck2'
+        match: '(?xi)
+          \\b
+          (
+            gold
+            |(?:
+              yearly
+              |monthly
+            )_income
+            |relative_income_to_liege
+            |(?:scaled_)?wealth
+            |treasury
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.objectives.ck2'
+        match: '(?xi)
+        \\b
+        (
+          has_(?:
+            ambition
+            |focus
+            |objective
+            |plot
+          )
+          |is_plot_(?:
+            active
+            |target_of
+          )
+          |num_of_plot_backers
+          |plot_(?:
+            is_known_by
+            |power(?:_contribution)?
+          )
+        )
+        \\b'
+      }
+      {
+        name: 'variable.language.condition.opinion.ck2'
+        match: '(?xi)
+        \\b
+        (
+          likes_better_than
+          |(?:reverse_)?has_
+          (
+            (?<!reverse_has_)non_aggression_pact_with
+            |opinion_modifier
+          )
+          |(?:
+            (?:reverse_)?personal_
+            |clan_
+            |their_
+            |reverse_
+          )?opinion(?:(?<!_opinion)_levy_raised_days)?
+          |(?:(?:reverse_)?personal_)?opinion_diff
+        )
+        \\b'
+      }
+      {
+        name: 'variable.language.condition.provinces.ck2'
+        match: '(?xi)
+          \\b
+          (
+            borders_(?:
+              lake
+              |major_river
+            )
+            |climate
+            |continent
+            |disease(?:_defence)?
+            |distance(?:_from_realm)?
+            |has_(?:
+              capital
+              |empty_holding
+              |higher_tech_than
+              |hospital
+              |trade_post
+            )
+            |hospital_level
+            |is_(?:
+              island
+              |land
+              |located_in
+              |winter
+            )
+            |num_of_(?:
+              empty_holdings
+              |(?:_max)?_settlements
+            )
+            |port
+            |province
+            |province(?:_id)?
+            |re(
+              gion(?:al_percentage)?
+              |volt_risk
+            )
+            |technology_can_spread
+            |terrain
+            |trade_route(?:_control)?
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.realm.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              among_most(?=(\\w)+s\\b)
+              |is(?!(\\w)+s\\b)
+            )_powerful_vassal(?:s)?
+            |(?:
+              has(?=\\w+d_p)
+              |will(?!\\w+d_p)
+            )_liege_enforce(?:
+              _peace
+              |d_peace
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.relations.ck2'
+        match: '(?xi)
+          \\b
+            (
+              is_(?:
+                foe
+                |friend
+                |rival
+                |within_diplo_range
+              )
+              |num_of_(?:
+                friends
+                |rivals
+              )
+            )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.religion.ck2'
+        match: '(?xi)
+          \\b
+          (
+            can_
+            (?:
+              call_crusade
+              |change_religion
+              |see_secret_religion
+            )
+            |controls_religion
+            |dislike_tribal_organization
+            |excommunicated_for
+            |has_
+            (?:
+              autocephaly
+              |called_crusade
+              |concubinage
+              |heresies
+              |polygamy
+              |secret_religion
+            )
+            |holy_order
+            |is_
+            (?:
+              hard_to_convert
+              |here
+              (?:
+                sy_of
+                |tic
+              )
+              |holy_site
+              |(?:
+                parent
+                |reformed
+              )_religion
+            )
+            |num_of_holy_sites
+            |religion_
+            (?:
+              allows_female_temple_holders
+              |authority
+            )
+            |rightful_religious_head
+            |(?:
+              secret_
+              |true_
+            )?religion(?:_group)?
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.rulers.ck2'
+        match: '(?xi)
+          \\b
+          (
+            completely_controls(?:_region)?
+            |demesne_
+            (?:
+              efficiency
+              |size(?:_compared_to_limit)?
+            )
+            |has_
+            (?:
+              de_jure_pretension
+              |overseas_holdings
+              |owner
+            )
+            |holding_diff
+            |independent
+            |is_
+            (?:
+              allowed_to_loot
+              |preferred_holding_type
+              |primary_holder_title
+              |ruler
+            )
+            |num_
+            (?:
+              (?:
+                of_
+                (?:
+                  hospitals(?:_diff)?
+                  |trade_post(?:
+                    s
+                    |_diff
+                  )
+                  |realm_counties
+                )
+              )
+              |title_realm_provs
+            )
+            |over
+            (?:
+              _max_demesne_size
+              |_vassal_limit
+              |lord_of
+            )
+            |owns
+            |realm_
+            (?:
+              character_percent
+              |diplomacy
+              |intrigue
+              |learning
+              |martial
+              |size
+              |stewardship
+            )
+            |relative
+            (?:
+              _power
+              (?:
+                _including_allies_
+                (?:
+                  attacker
+                  |defender
+                )
+              )?
+              |_realm_size
+            )
+            |republic_total_num_of_trade_posts
+            |ruled_years
+            |same_realm
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.societies.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              can_jo
+              |is_
+              |days_
+            )in_society
+            |(?:
+              days_at_current_(?!society_rank_full)
+              |is_(?=society_rank_full)
+            )?society_rank
+            (?:
+              (?<=_society_rank)_full
+            )?
+            |(?:
+              has(?!_quest_)
+              |is(?=_quest_)
+            )_quest(?:_target(?:_of)?)?
+            |interested_in_society(?:_of_character)?
+            |is_
+            (?:
+              interested_in_any_society
+              |quest_target(?:_of)?
+              |society_discovered(?:_real)?
+              |society_grandmaster
+            )
+            |same_society_as
+            |society_
+            (?:
+              can_rank_(?:
+                down
+                |up
+              )
+              |currency
+              |influence
+              |is_
+              (?:
+                criminal
+                |devil_worshiper
+              )
+              |member_of
+            )
+            |shares_realm_border_with
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.tier.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              higher
+              |lower
+            )_(?:real_)?tier_than
+            |(?:
+              real_
+              |is_primary_holder_title_
+            )?tier
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.titles.ck2'
+        match: '(?xi)
+          \\b
+          (
+            adventurer
+            |can_be_given_away
+            |(?:has_landed_)?title
+            |has_
+            (?:
+              holder
+              |mercenary_band
+              |newly_acquired_titles
+              |regent
+            )
+            |temporary
+            |held_title_rating
+            |in_revolt
+            |mercenary(?:_siphon_factor)?
+            |owns_mercenary_units
+            |is_
+            (?:
+              capital
+              |con
+              (?:
+                quered
+                |tested
+              )
+              |(?:
+                crown_law
+                |(?:
+                  primary
+                  |landless
+                  |tribal
+                )_type
+              )_title
+              |pr
+              (?:
+                etender
+                |imary_heir
+              )
+              |recent_grant
+              |tit
+              (?:
+                ular
+                |le_active
+              )
+              |vice_royalty
+            )
+            |num_
+            (?:
+              fitting_characters_for_title
+              |(?:
+                of_
+                (?:
+                  count_titles_in_realm
+                  |(?:
+                    baron
+                    |count
+                    |duke
+                    |emperor
+                    |king
+                    |extra_landed
+                  )_titles
+                )
+              )
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.traits.ck2'
+        match: '(?xi)
+          \\b
+          (
+            can_
+            (?:
+              copy_personality_trait_from
+              |have_more_leadership_traits
+            )
+            |has_
+            (?:
+              inheritance_blocker
+              |terrain_specialization
+            )
+            |(?:
+              health
+              |leader
+              |lifestyle
+              |num(_of)?
+              |personality
+            )_traits
+            |trait
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.units.ck2'
+        match: '(?xi)
+          \\b
+            (
+              is_navy
+              |unit_is_in_combat
+            )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.vassalage.ck2'
+        match: '(?xi)
+          \\b
+          (
+            de_
+            (?:
+              facto_liege(?:_title)?
+              |jure_liege(?:_or_above)?
+            )
+            |(
+              is
+              |de_jure
+            )_vassal_or_below
+            |is_
+            (?:
+              tributary
+              |vassal_or_below
+              |liege_o
+              (
+                f
+                |r_above
+              )
+            )
+            |num_of_(?:unique_dynasty_)?vassals
+            |(?:
+              same
+              |relative_power_to
+            )_liege
+            |vassal_of
+          )
+          \\b
+          '
+      }
+      {
+        name: 'variable.language.condition.wars.ck2'
+        match: '(?xi)
+          \\b
+          (
+            can_use_cb
+            |controlled_by
+            |loot
+            |preparing_invasion
+            |defending_against_claimant
+            |demesne_garrison_size
+            |reverse_has_truce
+            |troops
+            |using_cb
+            |is_
+            (?:
+              allied_with
+              |attacker
+              |looting(?:_in)?
+              |occupied
+              |primary_war_
+              (?:
+                attacker
+                |defender
+              )
+              |valid_viking_invasion_target
+            )
+            |has_
+            (?:
+              embargo
+              |raised_
+              (?:
+                standing_troops
+                |levies
+              )
+              |regiments
+              |siege
+              |truce
+            )
+            |war
+            (?:
+              _participation
+              |_score
+              |_title
+              |_with
+            )?
+            |flank_has_
+            (?:
+              leader
+              |tactic
+            )
+            |in
+            (?:
+              _(?:
+                battle
+                |siege
+              )
+              |famy
+            )
+            |realm_(
+            levies
+            |levy_diff
+            )
+          )
+          \\b
+          '
+      }
+      {
+        captures:
+          1: name: 'variable.language.scripted_trigger.ck2'
+        match: '(?xi)
+          \\b
+          (
+            [[:alnum:]_]+_trigger
+          )
+          (?=
+            \\s*
+            =
+            \\s*
+            (yes|no)
+          )
+          '
+      }
+      {
+        contentName: 'meta.attributes.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.attributes.ck2'
+          1: name: 'support.function.effect.attributes.ck2'
+          2: name: 'punctuation.definition.attributes.assignment.equals.ck2'
+          3: name: 'punctuation.definition.attributes.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (attributes)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.attributes.end.bracket.curly'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          # {
+          #   captures:
+          #     1: name: 'variable.language.condition.diplomacy.ck2'
+          #     2: name: 'variable.language.condition.martial.ck2'
+          #     3: name: 'variable.language.condition.stewardship.ck2'
+          #     4: name: 'variable.language.condition.intrigue.ck2'
+          #     5: name: 'variable.language.condition.learning.ck2'
+          #   match: '(?xi)
+          #     \\b
+          #     (?:
+          #       (diplomacy)
+          #       |(martial)
+          #       |(stewardship)
+          #       |(intrigue)
+          #       |(learning)
+          #
+          #     )
+          #     \\b
+          #     '
+          # }
+          { include: '#condition_clause' }
+          { include: '#global_includes' }
+        ]
+      }
+    ]
+  # clause:
+  #   patterns: [
+  #     {
+  #       name: 'meta.clause.ck2'
+  #       begin: '(?x)\\s*(=)\\s*(\\{)'
+  #       beginCaptures:
+  #         1: name: 'punctuation.section.clause.assignment.ck2'
+  #         2: name: 'punctuation.section.clause.begin.bracket.curly.ck2'
+  #       end: '\\B(\\})'
+  #       endCaptures:
+  #         1:
+  #           name: 'punctuation.section.clause.end.bracket.curly.ck2'
+  #       patterns: [
+  #         {include: '#clause_innards' }
+  #         {include: '#effects' }
+  #         {include: '#conditions' }
+  #       ]
+  #     }
+  #     { include: '#lineComment' }
+  #   ]
+  # clause_innards:
+  #   patterns: [
+  #     {
+  #       begin: '(?x)\\s*(=)\\s*(\\{)'
+  #       beginCaptures:
+  #         1: name: 'punctuation.section.clause.assignment.ck2'
+  #         2: name: 'punctuation.section.clause.begin.bracket.curly.ck2'
+  #       end: '\\B(\\})'
+  #       endCaptures:
+  #         1: name: 'punctuation.section.clause.end.bracket.curly.ck2'
+  #       patterns: [
+  #         { include: '#conditions' }
+  #         { include: '#effects' }
+  #         { include: '#clause_innards' }
+  #         { include: '$self' }
+  #       ]
+  #     }
+  #   ]
+  text_condition:
+    patterns: [
+      {
+        captures:
+          1: name: 'variable.language.condition.text.ck2'
+        match: '(?xi)
+          \\b
+            (text)
+          (?=
+            \\s*
+              =
+            \\s*
+              [\\w\'"\\[]
+          )
+          '
+      }
+    ]
+  effect_tooltips:
+    patterns: [
+      {
+        contentName: 'meta.effect.tooltip.ck2'
+        beginCaptures:
+          1: name: 'keyword.control.tooltip.ck2'
+          2: name: 'entity.type.tooltip.hidden.ck2'
+          3: name: 'entity.type.tooltip.conditional.ck2'
+          4: name: 'entity.type.tooltip.custom.ck2'
+          5: name: 'entity.type.tooltip.ck2'
+          6: name: 'punctuation.definition.tooltip.assignment.ck2'
+          7: name: 'punctuation.definition.tooltip.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            (?:
+              (?:
+                (hidden)
+                |(conditional)
+                |(custom)
+              )?_tooltip
+              |(tooltip)
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.tooltip.end.bracket.curly'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          { include: '#text_condition' }
+          { include: '#trigger_clause' }
+          { include: '#effect_clause' }
+        ]
+      }
+    ]
+  condition_tooltips:
+    patterns: [
+      {
+        contentName: 'meta.condition.tooltip.ck2'
+        beginCaptures:
+          1: name: 'keyword.control.tooltip.ck2'
+          2: name: 'entity.type.tooltip.hidden.ck2'
+          3: name: 'entity.type.tooltip.conditional.ck2'
+          4: name: 'entity.type.tooltip.custom.ck2'
+          5: name: 'punctuation.definition.tooltip.assignment.ck2'
+          6: name: 'punctuation.definition.tooltip.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            (?:
+              (?:
+                (hidden)
+                |(conditional)
+                |(custom)
+              )_
+            )tooltip
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.tooltip.end.bracket.curly'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          { include: '#text_condition' }
+          { include: '#trigger_clause' }
+          { include: '#condition_clause' }
+        ]
+      }
+    ]
+  chance_condition:
+    patterns: [
+      {
+        name: 'variable.language.condition.chance.ck2'
+        match: '(?xi)
+          \\b
+            chance
+          \\b
+          '
+      }
+    ]
+  effects:
+    patterns: [
+      {
+        name: 'meta.effect.chronicle.block.ck2'
+        contentName: 'markup.underline.chronicle.content.ck2'
+        beginCaptures:
+          1: name: 'support.function.effect.chronicle.ck2'
+          2: name: 'punctuation.section.clause.assignment.equals.ck2'
+          3: name: 'punctuation.section.clause.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (chronicle)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.section.clause.end.bracket.curly.ck2'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          {
+            captures:
+              1: name: 'variable.language.condition.chronicle.ck2'
+              2: name: 'entity.type.entry.ck2'
+              3: name: 'entity.type.portrait.ck2'
+              4: name: 'entity.type.picture.ck2'
+            match: '(?xi)
+              \\b
+                (
+                  (entry)
+                  |(portrait)
+                  |(picture)
+                )
+              \\b
+              '
+          }
+          { include: '#global_includes' }
+        ]
+      }
+      {
+        name: 'support.function.effect.army.ck2'
+        match: '(?xi)
+          \\b
+          (
+            morale
+            |troop
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.artifacts.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              (?:unsafe_)?destroy
+              |add
+              |transfer
+            )_artifact
+            |set(?:_artifact)?_original_owner
+          )
+          \\b
+          '
+      }
+      {
+        match: '(?xi)
+          \\b
+          (
+            banish
+            |decadence
+            |fertility
+            |force_host
+            |imprison
+            |move_character
+            |remove_nickname
+            |diplomatic_immunity
+            |add_random_education_trait
+            |(?:
+              set
+              |clear
+            )_focus
+            |give_(?:
+              minor_title
+              |nickname
+            )
+            |reverse_(?:
+              banish
+              |imprison
+            )
+            |(?:scaled_)?(?:
+              prestige
+              |piety
+            )
+            |set_(?:
+              graphical_culture
+              |name
+            )
+            |(?:
+              set
+              |remove
+            )_special_character_title
+            |occupy_minors_of_occupied_settlements
+            |change_(?:
+              diplomacy
+              |intrigue
+              |learning
+              |martial
+              |stewardship
+            )
+          )
+          \\b
+          '
+        name: 'support.function.effect.characters.ck2'
+      }
+      {
+        contentName: 'meta.create_character.block.ck2'
+        beginCaptures:
+          1: name: 'support.function.effect.characters.ck2'
+          2: name: 'entity.type.effect.create_character.ck2'
+          3: name: 'entity.type.effect.create_diplomat.ck2'
+          4: name: 'entity.type.effect.create_intriguer.ck2'
+          5: name: 'entity.type.effect.create_priest.ck2'
+          6: name: 'entity.type.effect.create_soldier.ck2'
+          7: name: 'entity.type.effect.create_steward.ck2'
+          8: name: 'punctuation.definition.create_character.assignment.equals.ck2'
+          9: name: 'punctuation.definition.create_character.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+          (
+            (create_character)
+            |create_random_(?:
+              (diplomat)
+              |(intriguer)
+              |(priest)
+              |(soldier)
+              |(steward)
+            )
+          )
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.create_character.end.bracket.curly.ck2'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          { include: '#condition_clause' }
+          { include: '#global_includes' }
+        ]
+      }
+      {
+        name: 'support.function.effect.claims.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              add(?:
+                _(?:
+                  weak(?:_pressed)?
+                  |pressed
+                )
+              )?
+              |remove
+              |press
+            )_claim
+          )
+          \\b'
+      }
+      {
+        name: 'support.function.effect.clans.ck2'
+        match: '(?xi)
+          \\b
+          (
+            add_population_scaled
+            |create_feud
+            |end_oath
+            |manpower
+            |population
+          )
+          \\b'
+      }
+      {
+        name: 'support.function.effect.control.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (
+              character
+              |province
+              |repeat
+              |letter
+              |narrative
+              |clear_delayed
+            )_event
+            |clear(?:
+              (?:_global)?_event_target(?:(?<=global[A-Z_]{13})s)?
+              |_flags_with_prefix
+            )
+            |save(?:_global)?_event_target_as
+            |log
+            |(?:
+              clr
+              |set
+            )_
+            (
+              artifact
+              |dynasty
+              |global
+              |province
+              |title
+              |character
+            )_flag
+            |(
+              set
+              |subtract
+              |change
+              |divide
+              |export_to
+              |multiply
+            )_variable
+          )
+          \\b'
+      }
+      {
+        contentName: 'meta.random.block.ck2'
+        beginCaptures:
+          0: name: 'entity.type.random.ck2'
+          1: name: 'support.function.effect.random.ck2'
+          2: name: 'punctuation.definition.random.assignment.equals.ck2'
+          3: name: 'punctuation.definition.random.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (random)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.random.end.bracket.curly'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          { include: '#chance_condition' }
+          { include: '#effect_clause' }
+          { include: '#global_includes' }
+        ]
+      }
+      {
+        contentName: 'meta.random_list.ck2'
+        beginCaptures:
+          0: name: 'entity.type.random_list.ck2'
+          1: name: 'support.function.effect.random_list.ck2'
+          2: name: 'punctuation.definition.random_list.assignment.equals.ck2'
+          3: name: 'punctuation.definition.random_list.begin.bracket.curly.ck2'
+        begin: '(?xi)
+          \\b
+            (random_list)
+          \\s*
+            (=)
+          \\s*
+            (\\{)
+          '
+        endCaptures:
+          1: name: 'punctuation.definition.random_list.end.bracket.curly'
+        end: '(?xi)
+            (\\})
+          '
+        patterns: [
+          {
+            contentName: 'meta.weight_value.ck2'
+            beginCaptures:
+              0: name: 'entity.type.weight_value.ck2'
+              1: name: 'support.function.effect.weight_value.ck2'
+              2: name: 'punctuation.definition.weight_value.assignment.ck2'
+              3: name: 'punctuation.definition.weight_value.begin.bracket.curly.ck2'
+            begin: '(?xi)
+              \\b
+                (\\d+)
+              \\s*
+                (=)
+              \\s*
+                (\\{)
+              '
+            endCaptures:
+              1: name: 'punctuation.definition.weight_value.end.bracket.curly'
+            end: '(?xi)
+                (\\})
+              '
+            patterns: [
+              { include: '#chance_condition' }
+              { include: '#modifier_clause' }
+              { include: '#effect_clause' }
+            ]
+          }
+          { include: '#global_includes' }
+        ]
+      }
+      {
+        name: 'support.function.effect.council.ck2'
+        match: '(?xi)
+          \\b
+          (
+            decline_law
+            |(?:
+              dis
+              |en
+            )able_council_voting_on_issue
+            |set_job_action
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.culture.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              conquest_
+              |reverse_
+            )?culture
+          )
+          \\b'
+      }
+      {
+        name: 'support.function.effect.factions.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              (?:
+                join
+                |leave
+                |start
+              )_
+            )?faction
+          )
+          \\b
+          (?=\\s*=\\s*\\{)
+          '
+      }
+      {
+        name: 'support.function.effect.family.ck2'
+        match: '(?xi)
+          \\b
+          (
+            set_(?:
+              mother
+              |reincarnation
+              |(?:real_)?father
+            )
+            |dynasty
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.government.ck2'
+        match: '(?xi)
+          \\b
+          (
+            copy_title_laws
+            |gender_succ
+            |hold_election
+            |(?:
+              approve
+              |revoke
+            )_law
+            |abdicate(?:_to_most_liked_by)?
+            |add_law(?:_w_cooldown)?
+            |(?:recalc_(?!\\w+_))?succession(?:_w_cooldown)?
+            |set_(?:
+              allow(?:
+                _feminism
+                |_(?:free
+                  (?:
+                    _(?:
+                      duchy
+                      |infidel
+                      |vice_royalty
+                    )
+                  )?
+                  |title
+                )_revokation
+                |_gender_laws
+                |_vice_royalties
+                |s_matrilineal_marriage
+              )
+              |appoint_(?:
+                generals
+                |regents
+              )
+              |government_type
+              |investiture
+              |pr(?:
+                eferred_capital
+                |otected_inheritance
+              )
+              |the_kings(?:_full)?_peace
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.guardianship.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              set
+              |remove
+            )_guardian
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.health.ck2'
+        match: '(?xi)
+          \\b
+          (
+            death
+            |start_outbreak
+            |start_outbreak
+            |health
+            |cure_illness
+            |(?:
+              activate
+              |reduce
+              |spawn
+            )_disease
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.holdings.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              make
+              |revoke
+            )
+            (?:
+              _capital
+              |build(?:_add_to_extra)?
+            )?_holding
+            |create_(?:
+              family_palace
+              |hospital
+              |tradepost
+            )
+            |(?:
+              add
+              |remove
+              |destroy_random
+            )_building
+            |convert_to
+            |add_holding_slot
+            |destroy_settlement
+            |refill_holding_levy
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.jobs.ck2'
+        match: '(?xi)
+          \\b
+          (
+            cancel_job_action
+            |(?:
+              remove
+              |give_job
+            )_title
+            |steal_(?:
+              random_tech
+              |population_scaled
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.laws.ck2'
+        match: '(?xi)
+          \\b
+          (
+            set_tribal_vassal_(?:
+              tax_income
+              |levy_control
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.marriage.ck2'
+        match: '(?xi)
+          \\b
+          (
+            add_(?:
+              betrothal
+              |consort
+              |spouse(?:_matrilineal)?
+            )
+            |remove_(?:
+              consort
+              |spouse
+            )
+            |break_betrothal
+            |make_primary_spouse
+            |impregnate(?:_cuckoo)?
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.modifiers.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              add(?!\\w+s)
+              |remove
+            )
+            _(?:
+              holding
+              |character
+              |province
+            )_modifier(s)?
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.money.ck2'
+        match: '(?xi)
+          \\b
+          (
+            treasury
+            |(?:(?:
+                clear
+                |(?:transfer_)?scaled
+            )_)?wealth
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.opinions.ck2'
+        match: '(?xi)
+          \\b
+          (
+            set_opinion_levy_raised_days
+            |(?:reverse_)?(?:
+              add
+              |remove
+            )_favor
+            |(?:(?:
+              clan
+              |(?:clan_)?reverse
+              |(?:reverse_)?remove
+            )_)?opinion
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.plots.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              activate
+              |back
+              |cancel
+              |leave
+              |reveal
+            )_plot(?:(?<=eal\\w{5})_w_message)?
+            |(?:
+              cancel
+              |add
+            )
+            _(?:
+              ambition
+              |objective
+            )
+            |(?:
+              plot
+              |ambition
+            )_succeeds
+            |change_plot_power
+            |send_assassin
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.provinces.ck2'
+        match: '(?xi)
+          \\b
+          (
+            destroy_(?:
+              fort
+              |hospital
+              |tradepost
+              |in_extra_holding
+            )
+            |change(?:
+              _random_(?:
+                eco
+                |mil
+                |civ
+              )
+            )?_tech
+            |clear_revolt
+            |province_capital
+            |rebel_defection
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.relations.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              add
+              |break
+            )_alliance
+            |(?:
+              add
+              |remove
+            )
+            _(?:
+              friend
+              |lover
+              |rival
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.religion.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:(?:
+              reverse
+              |banish
+              |unsafe
+              |(?:
+                clear
+                |set
+                |convert_to
+              )_secret
+              |set_parent
+            )_)?religion(?:(?<!_religion)_authority)?
+            |abandon_heresy
+            |become_heretic
+            |disable_prepared_invasion
+            |excommunicate
+            |set_pentarch_title
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.rulers.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              culture
+              |military
+              |economy
+            )_techpoints
+            |set_mercenary_maintenance_modifier
+            |change_mercenary_composition
+            |cut_mercenary_creator_relation
+            |adjust_siphon_factor
+            |make_primary_title
+            |seize_trade_post
+            |capital
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.societies.ck2'
+        match: '(?xi)
+          \\b
+          (
+            set_(?:
+              society_grandmaster
+              |(?:
+                interested
+                |discovered
+              )_society
+              |quest(?:_target)?
+            )
+            |add_society_modifier
+            |change_society_currency
+            |society_rank_(?:
+              down
+              |up
+            )
+            |clr_(?:
+              quest(?:_target)?
+              |discovered_society
+            )
+            |(?:
+              join
+              |leave
+            )_society
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.sounds.ck2'
+        match: '(?i)
+          \\b
+            (sound_effect)
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.titles.ck2'
+        match: '(?xi)
+          \\b
+          (
+            inherit
+            |adjective
+            |(?:
+              set
+              |reset
+            )_coa
+            |copy_title_history
+            |change_title_army_size
+            |set_title_(?:
+              nomad
+              |landless
+              |adventurer
+            )
+            |usurp_title(?:_(?:
+              plus_barony_if_unlanded
+              |only
+            ))?
+            |grant_(?:
+              kingdom_w_adjudication
+              |title_no_opinion
+            )
+            |gain_(?:
+              title_plus_barony_if_unlanded
+              |all_occupied_titles
+              |settlements_under_title
+            )
+            |(?:
+              (?:unsafe_)?destroy_landed
+              |activate
+              |create
+              |gain
+              |grant
+              |best_fit_character_for
+            )_title
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.traits.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              add
+              |remove
+              |clear_education
+            )_trait
+            |copy_(?:
+              name
+              |random_personality_trait
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.units.ck2'
+        match: '(?xi)
+          \\b
+          (
+            damage_unit(_morale)?
+            |spawn_(?:
+              unit
+              |fleet
+            )
+            |set_(?:
+              flank_tactic
+              |(?:can_toggle_)?looting
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.vassalage.ck2'
+        match: '(?xi)
+          \\b
+          (
+            (?:
+              make
+              |remove
+            )_tributary
+            |de_jure_liege
+            |vassalize_or_take_under_title
+            |set_de(?:
+              scription
+              |facto_(?:
+                liege
+                |vassal
+              )
+            )
+          )
+          \\b
+          '
+      }
+      {
+        name: 'support.function.effect.wars.ck2'
+        match: '(?xi)
+          \\b
+          (
+            subjugate_or_take_under_title
+            |join_(?:
+              attacker
+              |defender
+            )_wars
+            |(?:(?:
+              end|
+              (?:reverse_)?unsafe
+              |reverse
+            )_)?war
+            |participation_scaled_(?:
+              decadence
+              |piety
+              |prestige
+            )
+            |set_truce
+            |embargo
+            |change_infamy
+            |disband_event_forces
+            |enable_prepared_invasion
+          )
+          \\b
+          '
+      }
+      {
+        captures:
+          0: name: 'meta.scripted_effect-call.ck2'
+          1: name: 'support.function.effect.scripted_effect.ck2'
+        match: '(?xi)
+          \\b
+          (
+            [[:alnum:]_]+_effect
+          )
+          (?=\\s*=\\s*(yes|no))
+          '
+      }
+      {
+        captures:
+            1: name: 'support.function.effect.show_portrait.ck2'
+        match: '(?xi)
+          \\b
+          (show_portrait)
+          \\b
+          '
+      }
+    ]
