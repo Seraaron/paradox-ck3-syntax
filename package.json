@@ -1,6 +1,5 @@
 {
   "name": "paradox-ck3-syntax",
-  "theme": "syntax",
   "version": "0.2.0",
   "description": "Adds syntax highlighting to Crusader Kings III config files in Atom",
   "keywords": [
