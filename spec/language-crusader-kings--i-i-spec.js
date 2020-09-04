@@ -1,10 +1,10 @@
-describe("CK3 grammar", function() {
+describe("CK2 grammar", function() {
   var grammar = null;
-  var root = "source.ck3"; // defined here to allow painless changes (and reduce typing)
+  var root = "source.ck2"; // defined here to allow painless changes (and reduce typing)
 
   beforeEach(() => {
     waitsForPromise(() => {
-      return atom.packages.activatePackage("paradox-ck3-syntax");
+      return atom.packages.activatePackage("language-crusader-kings--i-i");
     });
 
     runs(() => {

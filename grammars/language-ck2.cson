@@ -1,9 +1,8 @@
-scopeName: 'source.ck3' # <scope> should be a short, unique indicator for the language ("js", "php", "c", etc.)
-name: 'Crusader Kings 3' # The title that will show up in grammar selection and on your status bar.
+scopeName: 'source.ck2' # <scope> should be a short, unique indicator for the language ("js", "php", "c", etc.)
+name: 'Crusader Kings 2' # The title that will show up in grammar selection and on your status bar.
 fileTypes: [ # An array of file extensions.
   'txt'
   'ck2'
-  'ck3'
 ]
 limitLineLength: false
 patterns: [

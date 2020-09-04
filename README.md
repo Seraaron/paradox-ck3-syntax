@@ -13,11 +13,11 @@ Adds syntax highlighting to [Crusader Kings III](https://www.paradoxplaza.com/cr
 * Highlights event_targets
 * And more!
 
-Contributions are greatly appreciated.
+Contributions are greatly appreciated!
 
-Special thanks to the following who've unknowingly contributed to this projects:
+Initially based on the [CK2 modding language support in Atom](https://atom.io/packages/language-crusader-kings--i-i) by howlinweed.
+With apecial thanks to the following who've unknowingly contributed to this projects:
 
-* [CK2 modding language support in Atom](https://atom.io/packages/language-crusader-kings--i-i)
 * [atom/language-c](https://github.com/atom/language-c)
 * [atom/language-javascript](https://github.com/atom/language-javascript)
 * [Aerijo](https://github.com/Aerijo) - great Atom grammar [tutorial](https://gist.github.com/Aerijo/b8c82d647db783187804e86fa0a604a1)

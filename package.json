@@ -1,7 +1,35 @@
 {
-  "name": "paradox-ck3-syntax",
-  "version": "0.2.1",
+  "_from": "https://www.atom.io/api/packages/paradox-ck3-syntax/versions/0.2.0/tarball",
+  "_id": "paradox-ck3-syntax@0.2.0",
+  "_inBundle": false,
+  "_integrity": "sha512-EQbICks3rTvkZ5Gpv/DD//xqKD93BY4F8v7ZpzDUicXkLYu+nF1QRZAj7FRfpFtOJkUX9/XBKr0SFeININOqqw==",
+  "_location": "/paradox-ck3-syntax",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "remote",
+    "raw": "https://www.atom.io/api/packages/paradox-ck3-syntax/versions/0.2.0/tarball",
+    "rawSpec": "https://www.atom.io/api/packages/paradox-ck3-syntax/versions/0.2.0/tarball",
+    "saveSpec": "https://www.atom.io/api/packages/paradox-ck3-syntax/versions/0.2.0/tarball",
+    "fetchSpec": "https://www.atom.io/api/packages/paradox-ck3-syntax/versions/0.2.0/tarball"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://www.atom.io/api/packages/paradox-ck3-syntax/versions/0.2.0/tarball",
+  "_shasum": "fce7c5f9424305225b5c15a4b3b43614383f9d21",
+  "_spec": "https://www.atom.io/api/packages/paradox-ck3-syntax/versions/0.2.0/tarball",
+  "_where": "C:\\Users\\Seraaron\\AppData\\Local\\Temp\\apm-install-dir-202082-9264-1dfzflq.o0gc",
+  "bugs": {
+    "url": "https://github.com/Seraaron/paradox-ck3-syntax/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
   "description": "Adds syntax highlighting to Crusader Kings III config files in Atom",
+  "engines": {
+    "atom": ">=1.0.0 <2.0.0"
+  },
+  "homepage": "https://github.com/Seraaron/paradox-ck3-syntax#readme",
   "keywords": [
     "syntax",
     "crusader",
@@ -12,9 +40,12 @@
     "paradoxplaza",
     "paradoxwikis"
   ],
-  "repository": "https://github.com/Seraaron/paradox-ck3-syntax",
   "license": "MIT",
-  "engines": {
-    "atom": ">=1.0.0 <2.0.0"
-  }
+  "name": "paradox-ck3-syntax",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Seraaron/paradox-ck3-syntax.git"
+  },
+  "theme": "syntax",
+  "version": "0.2.0"
 }
